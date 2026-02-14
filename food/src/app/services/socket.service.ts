@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class SocketService {
     private socket: Socket;
-    private readonly URL = 'http://localhost:3000';
+    private readonly URL = 'https://speak2-eatbackend.vercel.app';
 
     constructor() {
         this.socket = io(this.URL);

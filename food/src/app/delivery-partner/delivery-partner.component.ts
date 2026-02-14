@@ -838,7 +838,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
 
   // Load order locations
   loadOrderLocations(orderId: string) {
-    this.deliveryService.http.get(`http://localhost:3000/api/order/${orderId}/locations`)
+    this.deliveryService.http.get(`https://speak2-eatbackend.vercel.app/api/order/${orderId}/locations`)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
@@ -1038,7 +1038,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
     const useOrder = order || this.pendingOrder;
     if (!useOrder) return;
 
-    this.deliveryService.http.get(`http://localhost:3000/api/order/${useOrder._id}/locations`)
+    this.deliveryService.http.get(`https://speak2-eatbackend.vercel.app/api/order/${useOrder._id}/locations`)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {

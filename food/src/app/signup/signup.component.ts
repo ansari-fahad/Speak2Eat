@@ -53,7 +53,7 @@ export class SignupComponent {
       });
       return;
     }
-    
+
     this.loader = true;
     this.serverError = '';
     let formData = this.signupForm.value;
@@ -68,7 +68,7 @@ export class SignupComponent {
       role: formData.role
     };
 
-    this.http.post('http://localhost:3000/api/auth/signup/', formData)
+    this.http.post('https://speak2-eatbackend.vercel.app/api/auth/signup/', formData)
       .subscribe({
         next: (res) => {
           console.log('Signup success:', res);

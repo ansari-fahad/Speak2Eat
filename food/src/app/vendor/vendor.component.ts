@@ -274,7 +274,7 @@ export class VendorComponent implements OnInit, OnDestroy {
         if (vendorId) {
             this.loadingVendor = true;
             this.vendor._id = vendorId;
-            this.http.get(`http://localhost:3000/api/vendor/${vendorId}`).subscribe({
+            this.http.get(`https://speak2-eatbackend.vercel.app/api/vendor/${vendorId}`).subscribe({
                 next: (response: any) => {
                     this.vendor = response;
                     this.loadingVendor = false;
@@ -337,7 +337,7 @@ export class VendorComponent implements OnInit, OnDestroy {
         }
 
         // Toggle status in database
-        this.http.post(`http://localhost:3000/api/vendor/${vendorId}/status/toggle`, {})
+        this.http.post(`https://speak2-eatbackend.vercel.app/api/vendor/${vendorId}/status/toggle`, {})
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
@@ -366,7 +366,7 @@ export class VendorComponent implements OnInit, OnDestroy {
         }
 
         // Load vendor status from database
-        this.http.get(`http://localhost:3000/api/vendor/${vendorId}/status`)
+        this.http.get(`https://speak2-eatbackend.vercel.app/api/vendor/${vendorId}/status`)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
@@ -390,7 +390,7 @@ export class VendorComponent implements OnInit, OnDestroy {
         this.walletLoading = true;
 
         // Fetch wallet data from database
-        this.http.get(`http://localhost:3000/api/vendor/${vendorId}/wallet/balance`)
+        this.http.get(`https://speak2-eatbackend.vercel.app/api/vendor/${vendorId}/wallet/balance`)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
@@ -486,7 +486,7 @@ export class VendorComponent implements OnInit, OnDestroy {
 
                 const onConfirm = () => {
                     // Call backend withdrawal API
-                    this.http.post(`http://localhost:3000/api/vendor/${vendorId}/wallet/withdraw`, {
+                    this.http.post(`https://speak2-eatbackend.vercel.app/api/vendor/${vendorId}/wallet/withdraw`, {
                         amount: this.withdrawAmount
                     }).pipe(takeUntil(this.destroy$)).subscribe({
                         next: (response: any) => {
@@ -885,7 +885,7 @@ export class VendorComponent implements OnInit, OnDestroy {
     /**
  * Converts relative image paths to full URLs
  * Backend returns paths like: /uploads/filename.jpg
- * Browser needs: http://localhost:3000/uploads/filename.jpg
+ * Browser needs: https://speak2-eatbackend.vercel.app/uploads/filename.jpg
  */
     getImageUrl(imagePath: string | undefined): string {
         if (!imagePath) {
@@ -900,11 +900,11 @@ export class VendorComponent implements OnInit, OnDestroy {
         // If it starts with /, it's a relative path from backend
         // Need to prepend the backend URL
         if (imagePath.startsWith('/')) {
-            return `http://localhost:3000${imagePath}`;
+            return `https://speak2-eatbackend.vercel.app${imagePath}`;
         }
 
         // Otherwise, treat as path relative to backend
-        return `http://localhost:3000/uploads/${imagePath}`;
+        return `https://speak2-eatbackend.vercel.app/uploads/${imagePath}`;
     }
 
     // New Product Form
@@ -1348,7 +1348,7 @@ export class VendorComponent implements OnInit, OnDestroy {
         console.log("🔄 Updating vendor with ID:", this.vendor._id);
         console.log("📦 Update payload:", updatedVendor);
 
-        this.http.put(`http://localhost:3000/api/vendor/${this.vendor._id}`, updatedVendor)
+        this.http.put(`https://speak2-eatbackend.vercel.app/api/vendor/${this.vendor._id}`, updatedVendor)
             .subscribe({
                 next: (response: any) => {
                     console.log('✓ Profile updated successfully:', response);
@@ -1532,7 +1532,7 @@ export class VendorComponent implements OnInit, OnDestroy {
 
     loadOrderHistory(vendorId: string) {
         this.orderLoading = true;
-        this.http.get(`http://localhost:3000/api/order/vendor/${vendorId}/list`)
+        this.http.get(`https://speak2-eatbackend.vercel.app/api/order/vendor/${vendorId}/list`)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
@@ -1589,7 +1589,7 @@ export class VendorComponent implements OnInit, OnDestroy {
     loadTransactionHistory(vendorId: string) {
         this.transactionLoading = true;
         // Use the new simple endpoint that returns just the array
-        this.http.get(`http://localhost:3000/api/withdrawals/vendor/${vendorId}/list`)
+        this.http.get(`https://speak2-eatbackend.vercel.app/api/withdrawals/vendor/${vendorId}/list`)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {

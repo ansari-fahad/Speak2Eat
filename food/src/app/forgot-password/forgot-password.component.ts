@@ -32,7 +32,7 @@ export class ForgotPasswordComponent {
         const email = this.forgotForm.value.email;
 
         // Replace with your backend URL
-        this.http.post('http://localhost:3000/api/auth/forgot-password', { email }, { withCredentials: true }).subscribe({
+        this.http.post('https://speak2-eatbackend.vercel.app/api/auth/forgot-password', { email }, { withCredentials: true }).subscribe({
             next: (res: any) => {
                 // Save the email in local storage as requested
                 localStorage.setItem('resetEmail', email);

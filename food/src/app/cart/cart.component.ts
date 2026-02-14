@@ -56,7 +56,7 @@ export class CartComponent implements OnInit {
         if (!cleanPath.startsWith('uploads/')) cleanPath = `uploads/${cleanPath}`;
         if (cleanPath.startsWith('uploads/uploads/')) cleanPath = cleanPath.substring(8);
 
-        return `http://localhost:3000/${cleanPath}`;
+        return `https://speak2-eatbackend.vercel.app/${cleanPath}`;
     }
 
     calculateTotal() {

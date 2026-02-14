@@ -15,7 +15,7 @@ export interface Category {
     providedIn: 'root'
 })
 export class CategoryService {
-    private apiUrl = 'http://localhost:3000/api/category';
+    private apiUrl = 'https://speak2-eatbackend.vercel.app/api/category';
 
     constructor(private http: HttpClient) { }
 

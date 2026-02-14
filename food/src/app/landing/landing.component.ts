@@ -254,7 +254,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             cleanPath = cleanPath.substring(8);
         }
 
-        return `http://localhost:3000/${cleanPath}`;
+        return `https://speak2-eatbackend.vercel.app/${cleanPath}`;
     }
 
     ngAfterViewInit(): void {

@@ -108,7 +108,7 @@ export class VendorHistoryComponent implements OnInit, OnDestroy {
     if (!this.vendorId) return;
 
     this.orderLoading = true;
-    this.http.get(`http://localhost:3000/api/order/vendor/${this.vendorId}/list`)
+    this.http.get(`https://speak2-eatbackend.vercel.app/api/order/vendor/${this.vendorId}/list`)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
@@ -183,7 +183,7 @@ export class VendorHistoryComponent implements OnInit, OnDestroy {
     if (!this.vendorId) return;
 
     this.transactionLoading = true;
-    this.http.get(`http://localhost:3000/api/withdrawals/vendor/${this.vendorId}/list`)
+    this.http.get(`https://speak2-eatbackend.vercel.app/api/withdrawals/vendor/${this.vendorId}/list`)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {

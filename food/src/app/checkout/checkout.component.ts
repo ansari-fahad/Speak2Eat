@@ -54,7 +54,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   loadUserDetails() {
-    this.http.get<any>(`http://localhost:3000/api/auth/user/${this.userId}`).subscribe({
+    this.http.get<any>(`https://speak2-eatbackend.vercel.app/api/auth/user/${this.userId}`).subscribe({
       next: (res) => {
         const user = res.user;
         if (user) {
@@ -100,11 +100,11 @@ export class CheckoutComponent implements OnInit {
     console.log('📦 Place Order clicked');
     console.log('📋 Form valid?', this.checkoutForm.valid);
     console.log('📋 Form errors:', this.checkoutForm.errors);
-    
+
     if (this.checkoutForm.invalid) {
       console.warn('⚠️ Form is invalid');
       this.checkoutForm.markAllAsTouched();
-      
+
       // Show which fields are invalid
       Object.keys(this.checkoutForm.controls).forEach(key => {
         const control = this.checkoutForm.get(key);
@@ -112,7 +112,7 @@ export class CheckoutComponent implements OnInit {
           console.warn(`Field "${key}" is invalid:`, control.errors);
         }
       });
-      
+
       Swal.fire({
         icon: 'warning',
         title: 'Form Incomplete',
@@ -137,7 +137,7 @@ export class CheckoutComponent implements OnInit {
       .filter((p: any) => {
         const hasProduct = p.productId && (p.productId._id || p.productId);
         const hasVendor = p.vendorId && (p.vendorId._id || p.vendorId);
-        
+
         if (!hasProduct || !hasVendor) {
           console.warn('⚠️ Skipping invalid cart item:', p);
           return false;
@@ -147,7 +147,7 @@ export class CheckoutComponent implements OnInit {
       .map((p: any) => {
         const productId = typeof p.productId === 'string' ? p.productId : p.productId?._id;
         const vendorId = typeof p.vendorId === 'string' ? p.vendorId : p.vendorId?._id;
-        
+
         return {
           productId,
           vendorId,
@@ -251,7 +251,7 @@ export class CheckoutComponent implements OnInit {
     };
 
     console.log('📤 Sending order data:', orderData);
-    console.log('🌐 API endpoint: http://localhost:3000/api/order/create');
+    console.log('🌐 API endpoint: https://speak2-eatbackend.vercel.app/api/order/create');
 
     // Show loading alert
     Swal.fire({
@@ -265,20 +265,20 @@ export class CheckoutComponent implements OnInit {
     });
 
     // 1. Add to Order DB
-    this.http.post('http://localhost:3000/api/order/create', orderData).subscribe({
+    this.http.post('https://speak2-eatbackend.vercel.app/api/order/create', orderData).subscribe({
       next: (orderRes: any) => {
         console.log('✅ Order created successfully:', orderRes);
 
         // 2. Add to History DB (Chained)
-        this.http.post('http://localhost:3000/api/history/add', orderData).subscribe({
+        this.http.post('https://speak2-eatbackend.vercel.app/api/history/add', orderData).subscribe({
           next: (historyRes) => {
             console.log('✅ History saved successfully:', historyRes);
-            
+
             // 3. Clear Cart
             this.cartService.deleteCart().subscribe({
               next: () => {
                 console.log('✅ Cart cleared successfully');
-                
+
                 Swal.fire({
                   icon: 'success',
                   title: 'Order Placed Successfully!',
@@ -299,7 +299,7 @@ export class CheckoutComponent implements OnInit {
           error: (err) => {
             console.error('❌ Failed to save history:', err);
             console.error('Error details:', err.error, err.status);
-            
+
             // Still clear cart to avoid duplicate orders
             this.cartService.deleteCart().subscribe({
               next: () => {
@@ -323,7 +323,7 @@ export class CheckoutComponent implements OnInit {
         console.error('❌ Order creation failed:', err);
         console.error('Error status:', err.status);
         console.error('Error message:', err.error);
-        
+
         // Check if vendor is offline
         if (err.error?.message && err.error.message.includes('offline')) {
           Swal.fire({

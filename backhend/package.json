@@ -1,7 +1,7 @@
 {
   "name": "backhend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "/api/vercalserver.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "ISC", 
   "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",

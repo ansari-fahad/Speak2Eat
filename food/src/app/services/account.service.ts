@@ -26,7 +26,7 @@ export interface AccountDetails {
   providedIn: 'root'
 })
 export class AccountService {
-  private apiUrl = 'http://localhost:3000/api/account';
+  private apiUrl = 'https://speak2-eatbackend.vercel.app/api/account';
 
   constructor(private http: HttpClient) { }
 

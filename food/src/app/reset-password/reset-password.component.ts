@@ -33,7 +33,7 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     checkSession() {
-        this.http.get('http://localhost:3000/api/auth/validate-reset-session', {
+        this.http.get('https://speak2-eatbackend.vercel.app/api/auth/validate-reset-session', {
             withCredentials: true
         }).subscribe({
             next: (res: any) => {
@@ -64,7 +64,7 @@ export class ResetPasswordComponent implements OnInit {
         const newPassword = this.resetForm.value.newPassword;
 
         // We rely on the session cookie to identify the user
-        this.http.post('http://localhost:3000/api/auth/reset-password', { newPassword }, {
+        this.http.post('https://speak2-eatbackend.vercel.app/api/auth/reset-password', { newPassword }, {
             withCredentials: true // IMPORTANT: Send cookies
         }).subscribe({
             next: (res: any) => {

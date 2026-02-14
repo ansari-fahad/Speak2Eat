@@ -15,7 +15,7 @@ export interface Vendor {
     providedIn: 'root'
 })
 export class VendorService {
-    private apiUrl = 'http://localhost:3000/api/vendor';
+    private apiUrl = 'https://speak2-eatbackend.vercel.app/api/vendor';
 
     constructor(private http: HttpClient) { }
 

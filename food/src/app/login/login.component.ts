@@ -37,7 +37,7 @@ export class LoginComponent {
     const loginData = this.loginForm.value;
 
     // Replace with your backend URL
-    this.http.post('http://localhost:3000/api/auth/login', loginData).subscribe({
+    this.http.post('https://speak2-eatbackend.vercel.app/api/auth/login', loginData).subscribe({
       next: (res: any) => {
         console.log('Login successful', res);
         const name = res.user;

@@ -20,7 +20,7 @@ export interface Product {
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:3000/api/products';
+  private apiUrl = 'https://speak2-eatbackend.vercel.app/api/products';
 
   constructor(private http: HttpClient) { }
 

@@ -47,11 +47,11 @@ export class OrderHistoryComponent implements OnInit {
     // If role is vendor or vendorId exists, fetch vendor orders
     if (role === 'vendor' || vendorId) {
       const vId = vendorId || this.userId;
-      url = `http://localhost:3000/api/order/vendor/${vId}`;
+      url = `https://speak2-eatbackend.vercel.app/api/order/vendor/${vId}`;
       this.userRole = 'vendor';
     } else {
       // It's a regular user
-      url = `http://localhost:3000/api/order/user/${this.userId}`;
+      url = `https://speak2-eatbackend.vercel.app/api/order/user/${this.userId}`;
       this.userRole = 'user';
     }
 
@@ -110,7 +110,7 @@ export class OrderHistoryComponent implements OnInit {
     if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
     if (cleanPath.includes('products/')) cleanPath = cleanPath.replace('products/', '');
     if (!cleanPath.startsWith('uploads/')) cleanPath = `uploads/${cleanPath}`;
-    return `http://localhost:3000/${cleanPath}`;
+    return `https://speak2-eatbackend.vercel.app/${cleanPath}`;
   }
 
   getItemsSubtotal(order: any): number {

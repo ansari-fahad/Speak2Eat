@@ -324,7 +324,7 @@ export class CategoryProductsComponent implements OnInit {
       cleanPath = cleanPath.substring(8);
     }
 
-    return `http://localhost:3000/${cleanPath}`;
+    return `https://speak2-eatbackend.vercel.app/${cleanPath}`;
   }
 
   addToCart(product: Product, event: Event): void {

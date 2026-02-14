@@ -84,7 +84,7 @@ export class KitchenComponent implements OnInit {
     if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
     if (cleanPath.includes('products/')) cleanPath = cleanPath.replace('products/', '');
     if (!cleanPath.startsWith('uploads/')) cleanPath = `uploads/${cleanPath}`;
-    return `http://localhost:3000/${cleanPath}`;
+    return `https://speak2-eatbackend.vercel.app/${cleanPath}`;
   }
 
   // Helper to check login status

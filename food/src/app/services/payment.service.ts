@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'http://localhost:3000/api/payment';
+  private apiUrl = 'https://speak2-eatbackend.vercel.app/api/payment';
 
   constructor(private http: HttpClient) { }
 

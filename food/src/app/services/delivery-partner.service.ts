@@ -40,11 +40,11 @@ export interface DeliveryOrder {
   providedIn: 'root'
 })
 export class DeliveryPartnerService {
-  private apiUrl = 'http://localhost:3000/api/delivery-partner';
-  private socketUrl = 'http://localhost:3000';
+  private apiUrl = 'https://speak2-eatbackend.vercel.app/api/delivery-partner';
+  private socketUrl = 'https://speak2-eatbackend.vercel.app';
   private socket: Socket | null = null;
 
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient) { }
 
   // ======================== SOCKET.IO SETUP ========================
 
@@ -250,12 +250,12 @@ export class DeliveryPartnerService {
 
   // Get available orders ready for pickup
   getAvailableOrders(): Observable<any> {
-    return this.http.get<any>(`http://localhost:3000/api/order/ready/all`);
+    return this.http.get<any>(`https://speak2-eatbackend.vercel.app/api/order/ready/all`);
   }
 
   // Claim order as rider
   claimOrder(orderId: string, riderId: string, vendorId: string): Observable<any> {
-    return this.http.put<any>(`http://localhost:3000/api/order/${orderId}/assign-rider`, {
+    return this.http.put<any>(`https://speak2-eatbackend.vercel.app/api/order/${orderId}/assign-rider`, {
       riderId,
       vendorId
     });

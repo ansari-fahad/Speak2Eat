@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class AdminService {
-    private apiUrl = 'http://localhost:3000/api/admin';
+    private apiUrl = 'https://speak2-eatbackend.vercel.app/api/admin';
 
     constructor(private http: HttpClient) { }
 

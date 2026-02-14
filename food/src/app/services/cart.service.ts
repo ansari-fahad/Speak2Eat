@@ -7,7 +7,7 @@ import { isPlatformBrowser } from '@angular/common';
     providedIn: 'root'
 })
 export class CartService {
-    private apiUrl = 'http://localhost:3000/api/cart';
+    private apiUrl = 'https://speak2-eatbackend.vercel.app/api/cart';
 
     constructor(
         private http: HttpClient,
