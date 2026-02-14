@@ -897,14 +897,26 @@ export class VendorComponent implements OnInit, OnDestroy {
             return imagePath;
         }
 
-        // If it starts with /, it's a relative path from backend
-        // Need to prepend the backend URL
-        if (imagePath.startsWith('/')) {
-            return `${imagePath}`;
+        // Normalize slashes (fix Windows paths)
+        let cleanPath = imagePath.replace(/\\/g, '/');
+
+        // Remove leading slash if present
+        if (cleanPath.startsWith('/')) {
+            cleanPath = cleanPath.substring(1);
         }
 
-        // Otherwise, treat as path relative to backend
-        return `/uploads/${imagePath}`;
+        // Remove 'products/' prefix if present (legacy)
+        if (cleanPath.includes('products/')) {
+            cleanPath = cleanPath.replace('products/', '');
+        }
+
+        // Ensure it starts with uploads/
+        if (!cleanPath.startsWith('uploads/')) {
+            cleanPath = `uploads/${cleanPath}`;
+        }
+
+        // Return absolute path which will be handled by proxy/rewrite
+        return `/${cleanPath}`;
     }
 
     // New Product Form
