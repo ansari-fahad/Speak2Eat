@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
@@ -47,19 +47,19 @@ export class OrderHistoryComponent implements OnInit {
     // If role is vendor or vendorId exists, fetch vendor orders
     if (role === 'vendor' || vendorId) {
       const vId = vendorId || this.userId;
-      url = `https://speak2-eatbackend.vercel.app/api/order/vendor/${vId}`;
+      url = `/api/order/vendor/${vId}`;
       this.userRole = 'vendor';
     } else {
       // It's a regular user
-      url = `https://speak2-eatbackend.vercel.app/api/order/user/${this.userId}`;
+      url = `/api/order/user/${this.userId}`;
       this.userRole = 'user';
     }
 
-    console.log(`🔍 Fetching orders for ${this.userRole}:`, url);
+    console.log(`ðŸ” Fetching orders for ${this.userRole}:`, url);
 
     this.http.get<any[]>(url).subscribe({
       next: (data) => {
-        console.log(`✅ Loaded ${data.length} orders`);
+        console.log(`âœ… Loaded ${data.length} orders`);
 
         // Format orders properly for display
         this.orders = data.map((order: any) => {
@@ -96,7 +96,7 @@ export class OrderHistoryComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('❌ Error loading orders:', err);
+        console.error('âŒ Error loading orders:', err);
         this.orders = [];
         this.loading = false;
       }
@@ -110,7 +110,7 @@ export class OrderHistoryComponent implements OnInit {
     if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
     if (cleanPath.includes('products/')) cleanPath = cleanPath.replace('products/', '');
     if (!cleanPath.startsWith('uploads/')) cleanPath = `uploads/${cleanPath}`;
-    return `https://speak2-eatbackend.vercel.app/${cleanPath}`;
+    return `/${cleanPath}`;
   }
 
   getItemsSubtotal(order: any): number {
@@ -146,3 +146,4 @@ export class OrderHistoryComponent implements OnInit {
     this.router.navigate(['/']);
   }
 }
+

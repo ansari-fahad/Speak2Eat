@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VoiceNavigationService } from '../services/voice-navigation.service';
 
@@ -28,3 +28,4 @@ export class VoiceButtonComponent implements OnInit, OnDestroy {
         this.voiceService.stopListening();
     }
 }
+

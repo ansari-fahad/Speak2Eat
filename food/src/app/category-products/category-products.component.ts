@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -324,7 +324,7 @@ export class CategoryProductsComponent implements OnInit {
       cleanPath = cleanPath.substring(8);
     }
 
-    return `https://speak2-eatbackend.vercel.app/${cleanPath}`;
+    return `/${cleanPath}`;
   }
 
   addToCart(product: Product, event: Event): void {
@@ -344,3 +344,4 @@ export class CategoryProductsComponent implements OnInit {
     this.searchProducts();
   }
 }
+

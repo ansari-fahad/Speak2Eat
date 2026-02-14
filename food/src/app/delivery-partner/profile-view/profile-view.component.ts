@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { DeliveryPartnerService } from '../../services/delivery-partner.service';
@@ -53,3 +53,4 @@ export class ProfileViewComponent implements OnInit {
     this.router.navigate(['/delivery-partner'], { queryParams: { tab: 'profile' } });
   }
 }
+

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AccountService, AccountDetails } from '../services/account.service';
@@ -104,3 +104,4 @@ export class AccountsDetailsComponent implements OnInit {
     });
   }
 }
+

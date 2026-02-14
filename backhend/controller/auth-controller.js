@@ -184,7 +184,7 @@ const forgotPassword = async (req, res) => {
           <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
             <tr>
               <td align="center" bgcolor="#1E272E" style="border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
-                <a href="http://localhost:4200/reset-password" target="_blank" style="padding: 18px 40px; border-radius: 20px; font-family: 'Segoe UI', sans-serif; font-size: 18px; font-weight: bold; color: #ffffff; text-decoration: none; display: inline-block; border: 1px solid #1E272E;">
+                <a href="${process.env.CLIENT_URL || 'http://localhost:4200'}/reset-password" target="_blank" style="padding: 18px 40px; border-radius: 20px; font-family: 'Segoe UI', sans-serif; font-size: 18px; font-weight: bold; color: #ffffff; text-decoration: none; display: inline-block; border: 1px solid #1E272E;">
                   Reset Password
                 </a>
               </td>

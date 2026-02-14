@@ -3,6 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
 
 // Import all routers with adjusted paths
 const authrouter = require("../router/auth-router");
@@ -21,13 +23,47 @@ const productRouter = require("../router/product-router");
 const app = express();
 
 app.use(cors({
-    origin: ['http://localhost:4200', 'http://localhost:4201'],
+    origin: '*', // Allow all origins for Vercel deployment
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 
+// Mock socket.io middleware to prevent crashes
+app.use((req, res, next) => {
+    req.io = {
+        emit: (event, data) => {
+            // Socket.io is not supported in serverless functions
+            // silently ignore or log
+            // console.log('Socket event emitted:', event); 
+        },
+        to: (room) => {
+            return {
+                emit: (event, data) => {
+                    // console.log(`Socket event emitted to ${room}:`, event);
+                }
+            }
+        }
+    };
+    next();
+});
+
 app.use(express.json());
+
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'foodio_secret_key',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONOGO_URI || process.env.MONGODB_URI,
+        collectionName: 'sessions'
+    }),
+    cookie: {
+        secure: true, // Always true for Vercel
+        sameSite: 'none', // Allow cross-site usage
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    }
+}));
 
 // Serverless-safe DB connection
 let isConnected = false;
@@ -36,7 +72,7 @@ async function connectDB() {
     if (isConnected) return;
     try {
         // Note: Using MONOGO_URI as defined in .env
-        await mongoose.connect(process.env.MONOGO_URI);
+        await mongoose.connect(process.env.MONOGO_URI || process.env.MONGODB_URI);
         isConnected = true;
         console.log("MongoDB connected");
     } catch (error) {

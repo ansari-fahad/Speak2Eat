@@ -1,4 +1,4 @@
-
+﻿
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -32,7 +32,7 @@ export class ForgotPasswordComponent {
         const email = this.forgotForm.value.email;
 
         // Replace with your backend URL
-        this.http.post('https://speak2-eatbackend.vercel.app/api/auth/forgot-password', { email }, { withCredentials: true }).subscribe({
+        this.http.post('/api/auth/forgot-password', { email }, { withCredentials: true }).subscribe({
             next: (res: any) => {
                 // Save the email in local storage as requested
                 localStorage.setItem('resetEmail', email);
@@ -59,3 +59,4 @@ export class ForgotPasswordComponent {
         });
     }
 }
+

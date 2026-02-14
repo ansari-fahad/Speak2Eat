@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -15,7 +15,7 @@ export interface Vendor {
     providedIn: 'root'
 })
 export class VendorService {
-    private apiUrl = 'https://speak2-eatbackend.vercel.app/api/vendor';
+    private apiUrl = '/api/vendor';
 
     constructor(private http: HttpClient) { }
 
@@ -39,3 +39,4 @@ export class VendorService {
         return this.http.delete(`${this.apiUrl}/${vendorId}`);
     }
 }
+

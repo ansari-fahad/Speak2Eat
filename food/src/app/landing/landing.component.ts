@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+﻿import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
@@ -254,7 +254,7 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
             cleanPath = cleanPath.substring(8);
         }
 
-        return `https://speak2-eatbackend.vercel.app/${cleanPath}`;
+        return `/${cleanPath}`;
     }
 
     ngAfterViewInit(): void {
@@ -694,3 +694,4 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 }
+

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
@@ -40,8 +40,8 @@ export interface DeliveryOrder {
   providedIn: 'root'
 })
 export class DeliveryPartnerService {
-  private apiUrl = 'https://speak2-eatbackend.vercel.app/api/delivery-partner';
-  private socketUrl = 'https://speak2-eatbackend.vercel.app';
+  private apiUrl = '/api/delivery-partner';
+  private socketUrl = '';
   private socket: Socket | null = null;
 
   constructor(public http: HttpClient) { }
@@ -250,12 +250,12 @@ export class DeliveryPartnerService {
 
   // Get available orders ready for pickup
   getAvailableOrders(): Observable<any> {
-    return this.http.get<any>(`https://speak2-eatbackend.vercel.app/api/order/ready/all`);
+    return this.http.get<any>(`/api/order/ready/all`);
   }
 
   // Claim order as rider
   claimOrder(orderId: string, riderId: string, vendorId: string): Observable<any> {
-    return this.http.put<any>(`https://speak2-eatbackend.vercel.app/api/order/${orderId}/assign-rider`, {
+    return this.http.put<any>(`/api/order/${orderId}/assign-rider`, {
       riderId,
       vendorId
     });
@@ -266,3 +266,4 @@ export class DeliveryPartnerService {
     return this.http.get<any>(`${this.apiUrl}/${partnerId}/orders`);
   }
 }
+

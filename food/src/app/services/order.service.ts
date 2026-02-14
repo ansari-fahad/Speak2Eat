@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -29,7 +29,7 @@ export interface Order {
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = 'https://speak2-eatbackend.vercel.app/api/order';
+  private apiUrl = '/api/order';
 
   constructor(private http: HttpClient) { }
 
@@ -114,3 +114,4 @@ export class OrderService {
     return this.http.get<any>(`${this.apiUrl}/${orderId}/locations`);
   }
 }
+

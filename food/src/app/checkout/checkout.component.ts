@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -41,12 +41,12 @@ export class CheckoutComponent implements OnInit {
     // Get user ID from local storage
     if (typeof localStorage !== 'undefined') {
       this.userId = localStorage.getItem('userId');
-      console.log('✓ User ID from localStorage:', this.userId);
+      console.log('âœ“ User ID from localStorage:', this.userId);
     }
   }
 
   ngOnInit(): void {
-    console.log('🔄 Checkout component initialized');
+    console.log('ðŸ”„ Checkout component initialized');
     this.loadCart();
     if (this.userId) {
       this.loadUserDetails();
@@ -54,7 +54,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   loadUserDetails() {
-    this.http.get<any>(`https://speak2-eatbackend.vercel.app/api/auth/user/${this.userId}`).subscribe({
+    this.http.get<any>(`/api/auth/user/${this.userId}`).subscribe({
       next: (res) => {
         const user = res.user;
         if (user) {
@@ -62,7 +62,7 @@ export class CheckoutComponent implements OnInit {
             fullName: user.name || '',
             phone: user.number || ''
           });
-          console.log('✓ User details loaded:', user);
+          console.log('âœ“ User details loaded:', user);
         }
       },
       error: (err) => console.error('Error fetching user details:', err)
@@ -70,15 +70,15 @@ export class CheckoutComponent implements OnInit {
   }
 
   loadCart() {
-    console.log('🛒 Loading cart...');
+    console.log('ðŸ›’ Loading cart...');
     this.cartService.getCart().subscribe({
       next: (data) => {
-        console.log('✓ Cart loaded:', data);
+        console.log('âœ“ Cart loaded:', data);
         this.cart = data;
         this.calculateTotal();
       },
       error: (err) => {
-        console.error('❌ Error loading cart:', err);
+        console.error('âŒ Error loading cart:', err);
         Swal.fire('Error', 'Could not load cart details', 'error');
       }
     });
@@ -93,16 +93,16 @@ export class CheckoutComponent implements OnInit {
       const price = item.productId && item.productId.price ? item.productId.price : 0;
       return acc + (price * item.quantity);
     }, 0);
-    console.log('💰 Total price calculated:', this.totalPrice);
+    console.log('ðŸ’° Total price calculated:', this.totalPrice);
   }
 
   placeOrder() {
-    console.log('📦 Place Order clicked');
-    console.log('📋 Form valid?', this.checkoutForm.valid);
-    console.log('📋 Form errors:', this.checkoutForm.errors);
+    console.log('ðŸ“¦ Place Order clicked');
+    console.log('ðŸ“‹ Form valid?', this.checkoutForm.valid);
+    console.log('ðŸ“‹ Form errors:', this.checkoutForm.errors);
 
     if (this.checkoutForm.invalid) {
-      console.warn('⚠️ Form is invalid');
+      console.warn('âš ï¸ Form is invalid');
       this.checkoutForm.markAllAsTouched();
 
       // Show which fields are invalid
@@ -122,15 +122,15 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
-    console.log('🛒 Checking cart...');
+    console.log('ðŸ›’ Checking cart...');
     if (!this.cart || !this.cart.products || this.cart.products.length === 0) {
-      console.warn('⚠️ Cart is empty');
+      console.warn('âš ï¸ Cart is empty');
       Swal.fire('Empty Cart', 'Your cart is empty', 'warning');
       return;
     }
 
-    console.log('✓ Cart loaded, items:', this.cart.products);
-    console.log('✓ Cart has', this.cart.products.length, 'items');
+    console.log('âœ“ Cart loaded, items:', this.cart.products);
+    console.log('âœ“ Cart has', this.cart.products.length, 'items');
 
     // Safely extract product and vendor IDs with proper null checks
     const products = this.cart.products
@@ -139,7 +139,7 @@ export class CheckoutComponent implements OnInit {
         const hasVendor = p.vendorId && (p.vendorId._id || p.vendorId);
 
         if (!hasProduct || !hasVendor) {
-          console.warn('⚠️ Skipping invalid cart item:', p);
+          console.warn('âš ï¸ Skipping invalid cart item:', p);
           return false;
         }
         return true;
@@ -156,7 +156,7 @@ export class CheckoutComponent implements OnInit {
       });
 
     if (products.length === 0) {
-      console.error('❌ No valid products found in cart');
+      console.error('âŒ No valid products found in cart');
       Swal.fire('Error', 'Cart has no valid products. Please refresh and try again.', 'error');
       return;
     }
@@ -245,13 +245,13 @@ export class CheckoutComponent implements OnInit {
     const orderData = {
       userId: this.userId,
       products: products,
-      // Send SUBTOTAL only. Backend will add Delivery (₹40) + Platform Fee (₹4) exactly once.
+      // Send SUBTOTAL only. Backend will add Delivery (â‚¹40) + Platform Fee (â‚¹4) exactly once.
       total: this.totalPrice,
       paymentType: paymentType
     };
 
-    console.log('📤 Sending order data:', orderData);
-    console.log('🌐 API endpoint: https://speak2-eatbackend.vercel.app/api/order/create');
+    console.log('ðŸ“¤ Sending order data:', orderData);
+    console.log('ðŸŒ API endpoint: /api/order/create');
 
     // Show loading alert
     Swal.fire({
@@ -265,19 +265,19 @@ export class CheckoutComponent implements OnInit {
     });
 
     // 1. Add to Order DB
-    this.http.post('https://speak2-eatbackend.vercel.app/api/order/create', orderData).subscribe({
+    this.http.post('/api/order/create', orderData).subscribe({
       next: (orderRes: any) => {
-        console.log('✅ Order created successfully:', orderRes);
+        console.log('âœ… Order created successfully:', orderRes);
 
         // 2. Add to History DB (Chained)
-        this.http.post('https://speak2-eatbackend.vercel.app/api/history/add', orderData).subscribe({
+        this.http.post('/api/history/add', orderData).subscribe({
           next: (historyRes) => {
-            console.log('✅ History saved successfully:', historyRes);
+            console.log('âœ… History saved successfully:', historyRes);
 
             // 3. Clear Cart
             this.cartService.deleteCart().subscribe({
               next: () => {
-                console.log('✅ Cart cleared successfully');
+                console.log('âœ… Cart cleared successfully');
 
                 Swal.fire({
                   icon: 'success',
@@ -290,14 +290,14 @@ export class CheckoutComponent implements OnInit {
                 });
               },
               error: (err) => {
-                console.error('❌ Error clearing cart:', err);
+                console.error('âŒ Error clearing cart:', err);
                 // Still navigate even if cart clear fails
                 this.router.navigate(['/']);
               }
             });
           },
           error: (err) => {
-            console.error('❌ Failed to save history:', err);
+            console.error('âŒ Failed to save history:', err);
             console.error('Error details:', err.error, err.status);
 
             // Still clear cart to avoid duplicate orders
@@ -320,7 +320,7 @@ export class CheckoutComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error('❌ Order creation failed:', err);
+        console.error('âŒ Order creation failed:', err);
         console.error('Error status:', err.status);
         console.error('Error message:', err.error);
 

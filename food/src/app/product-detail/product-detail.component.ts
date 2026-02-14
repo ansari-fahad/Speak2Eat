@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Product, ALL_PRODUCTS } from '../shared/products.data';
@@ -99,3 +99,4 @@ export class ProductDetailComponent implements OnInit {
     return stars;
   }
 }
+

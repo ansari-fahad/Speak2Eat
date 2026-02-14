@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -37,7 +37,7 @@ export class LoginComponent {
     const loginData = this.loginForm.value;
 
     // Replace with your backend URL
-    this.http.post('https://speak2-eatbackend.vercel.app/api/auth/login', loginData).subscribe({
+    this.http.post('/api/auth/login', loginData).subscribe({
       next: (res: any) => {
         console.log('Login successful', res);
         const name = res.user;
@@ -88,3 +88,4 @@ export class LoginComponent {
     });
   }
 }
+

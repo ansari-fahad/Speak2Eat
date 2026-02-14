@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'https://speak2-eatbackend.vercel.app/api/payment';
+  private apiUrl = '/api/payment';
 
   constructor(private http: HttpClient) { }
 
@@ -37,3 +37,4 @@ export class PaymentService {
     });
   }
 }
+

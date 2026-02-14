@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class AdminService {
-    private apiUrl = 'https://speak2-eatbackend.vercel.app/api/admin';
+    private apiUrl = '/api/admin';
 
     constructor(private http: HttpClient) { }
 
@@ -73,3 +73,4 @@ export class AdminService {
         return this.http.delete<any>(`${this.apiUrl}/products/${id}`);
     }
 }
+

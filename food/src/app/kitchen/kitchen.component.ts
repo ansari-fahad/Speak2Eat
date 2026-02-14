@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -84,7 +84,7 @@ export class KitchenComponent implements OnInit {
     if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
     if (cleanPath.includes('products/')) cleanPath = cleanPath.replace('products/', '');
     if (!cleanPath.startsWith('uploads/')) cleanPath = `uploads/${cleanPath}`;
-    return `https://speak2-eatbackend.vercel.app/${cleanPath}`;
+    return `/${cleanPath}`;
   }
 
   // Helper to check login status
@@ -134,4 +134,5 @@ export class KitchenComponent implements OnInit {
     });
   }
 }
+
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -166,7 +166,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
   setupVoiceCommandListener() {
     this.voiceCommandListener = (event: any) => {
       const action = event.detail?.action;
-      console.log('🎤 Voice command received:', action);
+      console.log('ðŸŽ¤ Voice command received:', action);
 
       switch (action) {
         case 'openMap':
@@ -259,7 +259,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
     };
 
     window.addEventListener('voiceDeliveryCommand', this.voiceCommandListener);
-    console.log('✓ Voice command listener setup complete');
+    console.log('âœ“ Voice command listener setup complete');
   }
 
   // ======================== INITIALIZATION ========================
@@ -453,7 +453,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
           if (this.mapContainer?.nativeElement) {
             this.mapContainer.nativeElement.innerHTML = `
               <div style="padding: 20px; background: #f0f0f0; color: #333; text-align: center; border-radius: 8px;">
-                <p>📍 Location: ${lat.toFixed(4)}, ${lng.toFixed(4)}</p>
+                <p>ðŸ“ Location: ${lat.toFixed(4)}, ${lng.toFixed(4)}</p>
                 <p style="font-size: 12px; color: #666;">Map loading...</p>
               </div>
             `;
@@ -662,7 +662,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
 
             // Register socket listeners
             this.deliveryService.onFoodReady((data: any) => {
-              console.log('🔔 Food ready alert received via socket:', data);
+              console.log('ðŸ”” Food ready alert received via socket:', data);
               const incomingOrder = data?.order || data;
               const mapped = this.mapOrderToDeliveryOrder(incomingOrder);
 
@@ -726,7 +726,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
           // Backend may return either an array of orders or an object { orders: [...] }
           const rawOrders = Array.isArray(response) ? response : (response.orders || response.data || []);
           this.availableOrders = (rawOrders || []).map((o: any) => this.mapOrderToDeliveryOrder(o));
-          console.log('📦 Available orders loaded:', this.availableOrders.length);
+          console.log('ðŸ“¦ Available orders loaded:', this.availableOrders.length);
           this.loading = false;
           this.showAvailableOrdersList = true;
 
@@ -735,7 +735,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
-          console.error('❌ Error loading available orders:', error);
+          console.error('âŒ Error loading available orders:', error);
           this.loading = false;
           this.showModal('error', 'Error', 'Failed to load available orders');
         }
@@ -798,7 +798,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: any) => {
           this.loading = false;
-          console.log('✓ Order claimed:', response);
+          console.log('âœ“ Order claimed:', response);
 
           // Set addresses from response (vendor & user) if available
           const vendorAddressFromResp = response?.vendorLocation?.address;
@@ -830,7 +830,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           this.loading = false;
-          console.error('❌ Error claiming order:', error);
+          console.error('âŒ Error claiming order:', error);
           this.showModal('error', 'Error', 'Failed to claim order. It may have been claimed by another rider.');
         }
       });
@@ -838,11 +838,11 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
 
   // Load order locations
   loadOrderLocations(orderId: string) {
-    this.deliveryService.http.get(`https://speak2-eatbackend.vercel.app/api/order/${orderId}/locations`)
+    this.deliveryService.http.get(`/api/order/${orderId}/locations`)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
-          console.log('📍 Order locations loaded:', response);
+          console.log('ðŸ“ Order locations loaded:', response);
 
           // Prefer vendor/user addresses returned by backend
           if (response?.vendor?.address || response?.user?.address) {
@@ -870,7 +870,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
-          console.error('❌ Error loading locations:', error);
+          console.error('âŒ Error loading locations:', error);
         }
       });
   }
@@ -919,7 +919,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
             this.foodReadyAlert.isOpen = false;
 
             this.showModal('success', 'Delivered',
-              `Order delivered! Earned ₹${response.earnedAmount}`);
+              `Order delivered! Earned â‚¹${response.earnedAmount}`);
             this.loadPendingOrder();
             this.loadAllOrders();
             this.loadEarnings();
@@ -1038,7 +1038,7 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
     const useOrder = order || this.pendingOrder;
     if (!useOrder) return;
 
-    this.deliveryService.http.get(`https://speak2-eatbackend.vercel.app/api/order/${useOrder._id}/locations`)
+    this.deliveryService.http.get(`/api/order/${useOrder._id}/locations`)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
@@ -1123,3 +1123,4 @@ export class DeliveryPartnerComponent implements OnInit, OnDestroy {
     return '';
   }
 }
+

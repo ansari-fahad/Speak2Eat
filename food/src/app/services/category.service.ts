@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -15,7 +15,7 @@ export interface Category {
     providedIn: 'root'
 })
 export class CategoryService {
-    private apiUrl = 'https://speak2-eatbackend.vercel.app/api/category';
+    private apiUrl = '/api/category';
 
     constructor(private http: HttpClient) { }
 
@@ -23,3 +23,4 @@ export class CategoryService {
         return this.http.get<Category[]>(`${this.apiUrl}/`);
     }
 }
+

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+﻿import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { LandingComponent } from './landing/landing.component';
@@ -39,3 +39,4 @@ export const routes: Routes = [
   { path: 'vendor-history', component: VendorHistoryComponent }
 
 ];
+

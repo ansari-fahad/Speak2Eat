@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./signup.component.css'],
   imports: [
     CommonModule,
-    ReactiveFormsModule,  // ✅ THIS FIXES formGroup ERROR
+    ReactiveFormsModule,  // âœ… THIS FIXES formGroup ERROR
     RouterLink
 
   ]
@@ -68,7 +68,7 @@ export class SignupComponent {
       role: formData.role
     };
 
-    this.http.post('https://speak2-eatbackend.vercel.app/api/auth/signup/', formData)
+    this.http.post('/api/auth/signup/', formData)
       .subscribe({
         next: (res) => {
           console.log('Signup success:', res);
@@ -96,3 +96,4 @@ export class SignupComponent {
   }
 
 }
+

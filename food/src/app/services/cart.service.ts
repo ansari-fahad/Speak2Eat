@@ -1,4 +1,4 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+﻿import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
@@ -7,7 +7,7 @@ import { isPlatformBrowser } from '@angular/common';
     providedIn: 'root'
 })
 export class CartService {
-    private apiUrl = 'https://speak2-eatbackend.vercel.app/api/cart';
+    private apiUrl = '/api/cart';
 
     constructor(
         private http: HttpClient,
@@ -45,3 +45,4 @@ export class CartService {
         return this.http.delete(`${this.apiUrl}/${userId}`);
     }
 }
+

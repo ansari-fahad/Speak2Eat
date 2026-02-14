@@ -1,4 +1,4 @@
-// Shared product data for the entire application
+﻿// Shared product data for the entire application
 export interface Product {
     id: number;
     name: string;
@@ -21,8 +21,8 @@ export const ALL_PRODUCTS: Product[] = [
     { id: 2, name: 'Chicken Burger', description: 'Crispy chicken with special sauce', price: 249, image: 'https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=800&q=80', category: 'Burgers', rating: 4.6, reviews: 189, ingredients: ['Chicken Patty', 'Lettuce', 'Mayo', 'Bun'], nutritionInfo: { 'Calories': '580', 'Protein': '30g', 'Carbs': '42g', 'Fat': '28g' }, allergens: ['Gluten'] },
     { id: 3, name: 'Veggie Burger', description: 'Healthy vegetable patty burger', price: 199, image: 'https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=800&q=80', category: 'Burgers', rating: 4.5, reviews: 156, badge: 'Healthy', ingredients: ['Veggie Patty', 'Lettuce', 'Tomato', 'Avocado'], nutritionInfo: { 'Calories': '420', 'Protein': '15g', 'Carbs': '48g', 'Fat': '18g' }, allergens: ['Gluten'] },
     { id: 4, name: 'Double Cheese Burger', description: 'Extra cheese, extra happiness', price: 349, image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=800&q=80', category: 'Burgers', rating: 4.9, reviews: 312, ingredients: ['Beef Patty', 'Double Cheese', 'Lettuce', 'Tomato'], nutritionInfo: { 'Calories': '780', 'Protein': '42g', 'Carbs': '48g', 'Fat': '45g' }, allergens: ['Gluten', 'Dairy'] },
-    { id: 5, name: 'Spicy Chicken Burger', description: 'For those who love it hot', price: 279, image: 'https://images.unsplash.com/photo-1603064752734-4c48eff53d05?auto=format&fit=crop&w=800&q=80', category: 'Burgers', rating: 4.7, reviews: 198, badge: 'Spicy', ingredients: ['Spicy Chicken', 'Jalapeños', 'Pepper Jack Cheese'], nutritionInfo: { 'Calories': '620', 'Protein': '32g', 'Carbs': '44g', 'Fat': '30g' }, allergens: ['Gluten', 'Dairy'] },
-    { id: 6, name: 'Mushroom Swiss Burger', description: 'Sautéed mushrooms with Swiss cheese', price: 329, image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=800&q=80', category: 'Burgers', rating: 4.6, reviews: 167, ingredients: ['Beef Patty', 'Mushrooms', 'Swiss Cheese'], nutritionInfo: { 'Calories': '690', 'Protein': '36g', 'Carbs': '46g', 'Fat': '35g' }, allergens: ['Gluten', 'Dairy'] },
+    { id: 5, name: 'Spicy Chicken Burger', description: 'For those who love it hot', price: 279, image: 'https://images.unsplash.com/photo-1603064752734-4c48eff53d05?auto=format&fit=crop&w=800&q=80', category: 'Burgers', rating: 4.7, reviews: 198, badge: 'Spicy', ingredients: ['Spicy Chicken', 'JalapeÃ±os', 'Pepper Jack Cheese'], nutritionInfo: { 'Calories': '620', 'Protein': '32g', 'Carbs': '44g', 'Fat': '30g' }, allergens: ['Gluten', 'Dairy'] },
+    { id: 6, name: 'Mushroom Swiss Burger', description: 'SautÃ©ed mushrooms with Swiss cheese', price: 329, image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=800&q=80', category: 'Burgers', rating: 4.6, reviews: 167, ingredients: ['Beef Patty', 'Mushrooms', 'Swiss Cheese'], nutritionInfo: { 'Calories': '690', 'Protein': '36g', 'Carbs': '46g', 'Fat': '35g' }, allergens: ['Gluten', 'Dairy'] },
 
     // Pizza (7-12)
     { id: 7, name: 'Margherita Pizza', description: 'Classic tomato and mozzarella', price: 399, image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=80', category: 'Pizza', rating: 4.8, reviews: 423, badge: 'Classic', ingredients: ['Tomato Sauce', 'Mozzarella', 'Fresh Basil', 'Olive Oil'], nutritionInfo: { 'Calories': '720', 'Protein': '28g', 'Carbs': '85g', 'Fat': '25g' }, allergens: ['Gluten', 'Dairy'] },
@@ -111,3 +111,4 @@ export const ALL_PRODUCTS: Product[] = [
     { id: 85, name: 'Chai Latte', description: 'Spiced tea with steamed milk', price: 159, image: 'https://images.unsplash.com/photo-1578899952107-9d9d0d36a5e3?auto=format&fit=crop&w=800&q=80', category: 'Coffee & Tea', rating: 4.6, reviews: 234 },
     { id: 86, name: 'Matcha Latte', description: 'Green tea latte', price: 199, image: 'https://images.unsplash.com/photo-1536013564-3a1b1c35f1f7?auto=format&fit=crop&w=800&q=80', category: 'Coffee & Tea', rating: 4.7, reviews: 267 }
 ];
+

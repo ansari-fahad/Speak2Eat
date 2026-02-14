@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class SocketService {
     private socket: Socket;
-    private readonly URL = 'https://speak2-eatbackend.vercel.app';
+    private readonly URL = '';
 
     constructor() {
         this.socket = io(this.URL);
@@ -25,3 +25,4 @@ export class SocketService {
         this.socket.emit(eventName, data);
     }
 }
+

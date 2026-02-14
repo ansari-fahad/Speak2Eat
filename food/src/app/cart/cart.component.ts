@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { CartService } from '../services/cart.service';
@@ -56,7 +56,7 @@ export class CartComponent implements OnInit {
         if (!cleanPath.startsWith('uploads/')) cleanPath = `uploads/${cleanPath}`;
         if (cleanPath.startsWith('uploads/uploads/')) cleanPath = cleanPath.substring(8);
 
-        return `https://speak2-eatbackend.vercel.app/${cleanPath}`;
+        return `/${cleanPath}`;
     }
 
     calculateTotal() {
@@ -127,3 +127,4 @@ export class CartComponent implements OnInit {
         this.router.navigate(['/checkout']);
     }
 }
+

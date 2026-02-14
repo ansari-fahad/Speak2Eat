@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -229,10 +229,10 @@ export class VendorComponent implements OnInit, OnDestroy {
         this.categoryService.getAllCategories().subscribe({
             next: (data) => {
                 this.categories = data;
-                console.log('✓ Categories loaded:', this.categories);
+                console.log('âœ“ Categories loaded:', this.categories);
             },
             error: (error) => {
-                console.error('✗ Error loading categories:', error);
+                console.error('âœ— Error loading categories:', error);
             }
         });
     }
@@ -269,23 +269,23 @@ export class VendorComponent implements OnInit, OnDestroy {
 
     loadVendorData() {
         const vendorId = localStorage.getItem('userId');
-        console.log('🔍 Loading vendor data with ID:', vendorId);
+        console.log('ðŸ” Loading vendor data with ID:', vendorId);
 
         if (vendorId) {
             this.loadingVendor = true;
             this.vendor._id = vendorId;
-            this.http.get(`https://speak2-eatbackend.vercel.app/api/vendor/${vendorId}`).subscribe({
+            this.http.get(`/api/vendor/${vendorId}`).subscribe({
                 next: (response: any) => {
                     this.vendor = response;
                     this.loadingVendor = false;
-                    console.log('✓ Vendor data loaded from server:', this.vendor);
+                    console.log('âœ“ Vendor data loaded from server:', this.vendor);
                     this.loadVendorProducts();
                     this.loadVendorOnlineStatus(); // Load online status from database
                 },
                 error: (error) => {
                     this.loadingVendor = false;
-                    console.error('✗ Error loading vendor from server:', error);
-                    console.warn('⚠️ Using local vendor data with ID from localStorage:', vendorId);
+                    console.error('âœ— Error loading vendor from server:', error);
+                    console.warn('âš ï¸ Using local vendor data with ID from localStorage:', vendorId);
                     // Keep the local ID even if API fails
                     this.vendor._id = vendorId;
                     this.loadVendorProducts();
@@ -293,7 +293,7 @@ export class VendorComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
-            console.warn('⚠️ No vendor ID found in localStorage - user may not be logged in');
+            console.warn('âš ï¸ No vendor ID found in localStorage - user may not be logged in');
             this.showModal('warning', 'Not Logged In', 'You are not logged in. Please log in to update your profile.');
         }
     }
@@ -337,11 +337,11 @@ export class VendorComponent implements OnInit, OnDestroy {
         }
 
         // Toggle status in database
-        this.http.post(`https://speak2-eatbackend.vercel.app/api/vendor/${vendorId}/status/toggle`, {})
+        this.http.post(`/api/vendor/${vendorId}/status/toggle`, {})
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
-                    console.log('✓ Vendor status updated:', response);
+                    console.log('âœ“ Vendor status updated:', response);
                     this.vendorOnline = response.vendor?.isOnline || !this.vendorOnline;
                     localStorage.setItem('vendorOnline', this.vendorOnline.toString());
 
@@ -353,7 +353,7 @@ export class VendorComponent implements OnInit, OnDestroy {
                     this.showModal('info', `You are ${status}`, message);
                 },
                 error: (error) => {
-                    console.error('❌ Error toggling vendor status:', error);
+                    console.error('âŒ Error toggling vendor status:', error);
                     this.showModal('error', 'Error', 'Failed to update status. Please try again.');
                 }
             });
@@ -366,16 +366,16 @@ export class VendorComponent implements OnInit, OnDestroy {
         }
 
         // Load vendor status from database
-        this.http.get(`https://speak2-eatbackend.vercel.app/api/vendor/${vendorId}/status`)
+        this.http.get(`/api/vendor/${vendorId}/status`)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
-                    console.log('✓ Vendor status loaded:', response);
+                    console.log('âœ“ Vendor status loaded:', response);
                     this.vendorOnline = response.isOnline || false;
                     localStorage.setItem('vendorOnline', this.vendorOnline.toString());
                 },
                 error: (error) => {
-                    console.error('❌ Error loading vendor status:', error);
+                    console.error('âŒ Error loading vendor status:', error);
                     // Fallback to localStorage if API fails
                     this.vendorOnline = localStorage.getItem('vendorOnline') === 'true';
                 }
@@ -390,7 +390,7 @@ export class VendorComponent implements OnInit, OnDestroy {
         this.walletLoading = true;
 
         // Fetch wallet data from database
-        this.http.get(`https://speak2-eatbackend.vercel.app/api/vendor/${vendorId}/wallet/balance`)
+        this.http.get(`/api/vendor/${vendorId}/wallet/balance`)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
@@ -404,7 +404,7 @@ export class VendorComponent implements OnInit, OnDestroy {
                     // This allows both cash + online income to be withdrawn
                     this.availableIncome = response.availableBalance || 0;
 
-                    console.log(`💰 Wallet loaded:`, {
+                    console.log(`ðŸ’° Wallet loaded:`, {
                         totalIncome: this.totalEarnings,
                         availableBalance: this.availableIncome
                     });
@@ -446,11 +446,11 @@ export class VendorComponent implements OnInit, OnDestroy {
             return;
         }
 
-        console.log('💰 Withdrawal Request Debug:');
-        console.log(`   withdrawAmount: ₹${this.withdrawAmount}`);
-        console.log(`   availableIncome: ₹${this.availableIncome}`);
-        console.log(`   totalEarnings: ₹${this.totalEarnings}`);
-        console.log(`   walletBalance: ₹${this.walletBalance}`);
+        console.log('ðŸ’° Withdrawal Request Debug:');
+        console.log(`   withdrawAmount: â‚¹${this.withdrawAmount}`);
+        console.log(`   availableIncome: â‚¹${this.availableIncome}`);
+        console.log(`   totalEarnings: â‚¹${this.totalEarnings}`);
+        console.log(`   walletBalance: â‚¹${this.walletBalance}`);
 
         if (this.withdrawAmount <= 0) {
             this.showModal('error', 'Invalid Amount', 'Please enter a valid amount');
@@ -458,14 +458,14 @@ export class VendorComponent implements OnInit, OnDestroy {
         }
 
         if (this.withdrawAmount < this.minWithdrawAmount) {
-            this.showModal('error', 'Minimum Amount', `Minimum withdrawal amount is ₹${this.minWithdrawAmount}`);
+            this.showModal('error', 'Minimum Amount', `Minimum withdrawal amount is â‚¹${this.minWithdrawAmount}`);
             return;
         }
 
         // Check available balance (totalEarnings - totalWithdrawn, includes cash + online)
         if (this.withdrawAmount > this.availableIncome) {
             this.showModal('error', 'Insufficient Balance',
-                `Available balance is ₹${this.availableIncome.toFixed(2)}. You have already withdrawn some amount.`);
+                `Available balance is â‚¹${this.availableIncome.toFixed(2)}. You have already withdrawn some amount.`);
             return;
         }
 
@@ -486,11 +486,11 @@ export class VendorComponent implements OnInit, OnDestroy {
 
                 const onConfirm = () => {
                     // Call backend withdrawal API
-                    this.http.post(`https://speak2-eatbackend.vercel.app/api/vendor/${vendorId}/wallet/withdraw`, {
+                    this.http.post(`/api/vendor/${vendorId}/wallet/withdraw`, {
                         amount: this.withdrawAmount
                     }).pipe(takeUntil(this.destroy$)).subscribe({
                         next: (response: any) => {
-                            console.log('✅ Withdrawal successful:', response);
+                            console.log('âœ… Withdrawal successful:', response);
                             // Update balances from server response so values persist after refresh
                             if (response && typeof response.availableBalance === 'number') {
                                 this.availableIncome = response.availableBalance;
@@ -502,7 +502,7 @@ export class VendorComponent implements OnInit, OnDestroy {
                             const transaction: WalletTransaction = {
                                 type: 'withdrawal',
                                 amount: totalDeduction,
-                                description: `Withdrawal - ₹${transferAmount.toFixed(2)} transferred to bank (Fee: ₹${feeAmount.toFixed(2)})`,
+                                description: `Withdrawal - â‚¹${transferAmount.toFixed(2)} transferred to bank (Fee: â‚¹${feeAmount.toFixed(2)})`,
                                 date: new Date()
                             };
                             this.walletTransactions.unshift(transaction);
@@ -513,10 +513,10 @@ export class VendorComponent implements OnInit, OnDestroy {
 
                             this.withdrawAmount = 0;
                             this.showModal('success', 'Withdrawal Processed',
-                                `✓ Withdrawal Successful!\n\nAmount Transferred: ₹${transferAmount.toFixed(2)}\nPlatform Fee (2%): ₹${feeAmount.toFixed(2)}\nTotal Deducted: ₹${totalDeduction.toFixed(2)}`);
+                                `âœ“ Withdrawal Successful!\n\nAmount Transferred: â‚¹${transferAmount.toFixed(2)}\nPlatform Fee (2%): â‚¹${feeAmount.toFixed(2)}\nTotal Deducted: â‚¹${totalDeduction.toFixed(2)}`);
                         },
                         error: (error) => {
-                            console.error('❌ Withdrawal error:', error);
+                            console.error('âŒ Withdrawal error:', error);
                             console.log('Error response:', error.error);
                             const errorMsg = error.error?.message || 'Failed to process withdrawal. Please try again.';
                             this.showModal('error', 'Withdrawal Failed', errorMsg);
@@ -525,7 +525,7 @@ export class VendorComponent implements OnInit, OnDestroy {
                 };
 
                 this.showModal('confirm', 'Confirm Withdrawal',
-                    `Withdrawal Amount: ₹${this.withdrawAmount}\nPlatform Fee (2%): -₹${feeAmount.toFixed(2)}\nAmount to Bank: ₹${transferAmount.toFixed(2)}\n\nRemaining Balance: ₹${(this.availableIncome - totalDeduction).toFixed(2)}\n\nProceed?`,
+                    `Withdrawal Amount: â‚¹${this.withdrawAmount}\nPlatform Fee (2%): -â‚¹${feeAmount.toFixed(2)}\nAmount to Bank: â‚¹${transferAmount.toFixed(2)}\n\nRemaining Balance: â‚¹${(this.availableIncome - totalDeduction).toFixed(2)}\n\nProceed?`,
                     onConfirm
                 );
             },
@@ -564,11 +564,11 @@ export class VendorComponent implements OnInit, OnDestroy {
             this.walletTransactions.unshift(transaction);
             this.saveWalletData(vendorId);
             this.depositAmount = 0;
-            this.showModal('success', 'Funds Added', `₹${transaction.amount} has been added to your wallet.`);
+            this.showModal('success', 'Funds Added', `â‚¹${transaction.amount} has been added to your wallet.`);
         };
 
         this.showModal('confirm', 'Add Funds',
-            `Add ₹${this.depositAmount} to your wallet? (Simulated - in production this would integrate with payment gateway)`,
+            `Add â‚¹${this.depositAmount} to your wallet? (Simulated - in production this would integrate with payment gateway)`,
             onConfirm
         );
     }
@@ -578,17 +578,17 @@ export class VendorComponent implements OnInit, OnDestroy {
 
         const vendorId = localStorage.getItem('userId');
         if (!vendorId) {
-            console.warn('⚠️ No vendor ID found - cannot load products');
+            console.warn('âš ï¸ No vendor ID found - cannot load products');
             this.loadingProducts = false;
             return;
         }
 
         // Fetch ONLY this vendor's products
-        console.log('📦 Fetching products for vendor:', vendorId);
+        console.log('ðŸ“¦ Fetching products for vendor:', vendorId);
 
         this.productService.getProductsByVendor(vendorId).subscribe({
             next: (response: any) => {
-                console.log('📦 Raw API Response:', response);
+                console.log('ðŸ“¦ Raw API Response:', response);
 
                 // Handle response - could be array or object with data property
                 let productList = [];
@@ -604,11 +604,11 @@ export class VendorComponent implements OnInit, OnDestroy {
                 this.stats.totalProducts = this.products.length;
                 this.loadingProducts = false;
 
-                console.log('✅ Successfully loaded', this.products.length, 'products for vendor');
-                console.log('✓ Vendor products loaded:', this.products);
+                console.log('âœ… Successfully loaded', this.products.length, 'products for vendor');
+                console.log('âœ“ Vendor products loaded:', this.products);
             },
             error: (error) => {
-                console.error('❌ Error loading products:', error);
+                console.error('âŒ Error loading products:', error);
                 console.error('Error Details:', error.error, error.status);
                 this.products = [];
                 this.stats.totalProducts = 0;
@@ -620,7 +620,7 @@ export class VendorComponent implements OnInit, OnDestroy {
     loadVendorOrders() {
         const vendorId = localStorage.getItem('userId');
         if (!vendorId) {
-            console.warn('⚠️ No vendor ID found - cannot load orders');
+            console.warn('âš ï¸ No vendor ID found - cannot load orders');
             return;
         }
 
@@ -722,7 +722,7 @@ export class VendorComponent implements OnInit, OnDestroy {
                     this.loadingOrders = false;
                 },
                 error: (error) => {
-                    console.error('❌ Error loading orders:', error);
+                    console.error('âŒ Error loading orders:', error);
                     this.orders = [];
                     this.loadingOrders = false;
                 }
@@ -829,7 +829,7 @@ export class VendorComponent implements OnInit, OnDestroy {
                     this.walletTransactions.unshift(transaction);
 
                     this.showModal('warning', 'Late Fee Deducted',
-                        `Order #${order.id} exceeded 30-minute preparation time.\n\nLate Fee (10%): ₹${lateFee} has been deducted from your wallet.`);
+                        `Order #${order.id} exceeded 30-minute preparation time.\n\nLate Fee (10%): â‚¹${lateFee} has been deducted from your wallet.`);
                 }
             }
         }, 1000);
@@ -885,7 +885,7 @@ export class VendorComponent implements OnInit, OnDestroy {
     /**
  * Converts relative image paths to full URLs
  * Backend returns paths like: /uploads/filename.jpg
- * Browser needs: https://speak2-eatbackend.vercel.app/uploads/filename.jpg
+ * Browser needs: /uploads/filename.jpg
  */
     getImageUrl(imagePath: string | undefined): string {
         if (!imagePath) {
@@ -900,11 +900,11 @@ export class VendorComponent implements OnInit, OnDestroy {
         // If it starts with /, it's a relative path from backend
         // Need to prepend the backend URL
         if (imagePath.startsWith('/')) {
-            return `https://speak2-eatbackend.vercel.app${imagePath}`;
+            return `${imagePath}`;
         }
 
         // Otherwise, treat as path relative to backend
-        return `https://speak2-eatbackend.vercel.app/uploads/${imagePath}`;
+        return `/uploads/${imagePath}`;
     }
 
     // New Product Form
@@ -1006,8 +1006,8 @@ export class VendorComponent implements OnInit, OnDestroy {
         this.productService.createProduct(formData).subscribe({
             next: (response: any) => {
                 this.isAddingProduct = false;
-                this.addProductSuccess = '✓ Product added successfully!';
-                console.log('✓ Product added:', response);
+                this.addProductSuccess = 'âœ“ Product added successfully!';
+                console.log('âœ“ Product added:', response);
 
                 // Add to local products list
                 const newProduct: Product = {
@@ -1044,7 +1044,7 @@ export class VendorComponent implements OnInit, OnDestroy {
             },
             error: (error: any) => {
                 this.isAddingProduct = false;
-                console.error('✗ Error adding product:', error);
+                console.error('âœ— Error adding product:', error);
                 const errorMsg = error.error?.message || error.message || 'Failed to add product. Please try again.';
                 this.addProductError = errorMsg;
             }
@@ -1065,7 +1065,7 @@ export class VendorComponent implements OnInit, OnDestroy {
             // Call the API to delete from database
             this.productService.deleteProduct(productId).subscribe({
                 next: (response: any) => {
-                    console.log('✓ Product deleted successfully:', response);
+                    console.log('âœ“ Product deleted successfully:', response);
 
                     // Remove from local products list
                     this.products = this.products.filter(
@@ -1076,7 +1076,7 @@ export class VendorComponent implements OnInit, OnDestroy {
                     this.showModal('success', 'Success', 'Product deleted successfully!');
                 },
                 error: (error: any) => {
-                    console.error('❌ Error deleting product:', error);
+                    console.error('âŒ Error deleting product:', error);
                     const errorMsg = error.error?.message || error.message || 'Failed to delete product. Please try again.';
                     this.showModal('error', 'Error', `Failed to delete product:\n${errorMsg}`);
                 }
@@ -1133,7 +1133,7 @@ export class VendorComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
-                    console.log('✓ Order accepted:', response);
+                    console.log('âœ“ Order accepted:', response);
                     order.status = 'Confirmed';
                     this.showOrderTimer = false;
 
@@ -1144,7 +1144,7 @@ export class VendorComponent implements OnInit, OnDestroy {
                     this.showModal('success', 'Order Accepted', `Order #${order.id} has been accepted. You have 30 minutes to prepare!`);
                 },
                 error: (error) => {
-                    console.error('❌ Error accepting order:', error);
+                    console.error('âŒ Error accepting order:', error);
                     this.showModal('error', 'Error', 'Failed to accept order. Please try again.');
                 }
             });
@@ -1161,14 +1161,14 @@ export class VendorComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this.destroy$))
                 .subscribe({
                     next: (response: any) => {
-                        console.log('✓ Order rejected:', response);
+                        console.log('âœ“ Order rejected:', response);
                         order.status = 'Cancelled';
                         this.showOrderTimer = false;
                         this.updateOrderStats();
                         this.showModal('info', 'Order Rejected', `Order #${order.id} has been rejected.`);
                     },
                     error: (error) => {
-                        console.error('❌ Error rejecting order:', error);
+                        console.error('âŒ Error rejecting order:', error);
                         this.showModal('error', 'Error', 'Failed to reject order. Please try again.');
                     }
                 });
@@ -1190,7 +1190,7 @@ export class VendorComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
-                    console.log('✓ Order completed:', response);
+                    console.log('âœ“ Order completed:', response);
                     order.status = 'Delivered';
 
                     // Stop preparation timer
@@ -1215,7 +1215,7 @@ export class VendorComponent implements OnInit, OnDestroy {
                     this.showModal('success', 'Order Completed', `Order #${order.id} has been marked as delivered!`);
                 },
                 error: (error) => {
-                    console.error('❌ Error completing order:', error);
+                    console.error('âŒ Error completing order:', error);
                     this.showModal('error', 'Error', 'Failed to complete order. Please try again.');
                 }
             });
@@ -1237,7 +1237,7 @@ export class VendorComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
-                    console.log('✓ Order marked as ready:', response);
+                    console.log('âœ“ Order marked as ready:', response);
                     order.status = 'Ready for Pickup';
 
                     // Stop preparation timer
@@ -1251,7 +1251,7 @@ export class VendorComponent implements OnInit, OnDestroy {
                     this.showModal('success', 'Order Ready', `Order #${order.id} is ready! A rider will pick it up soon.`);
                 },
                 error: (error) => {
-                    console.error('❌ Error marking order ready:', error);
+                    console.error('âŒ Error marking order ready:', error);
                     this.showModal('error', 'Error', 'Failed to mark order as ready. Please try again.');
                 }
             });
@@ -1345,19 +1345,19 @@ export class VendorComponent implements OnInit, OnDestroy {
             shopidentificationNumber: this.vendor.shopidentificationNumber
         };
 
-        console.log("🔄 Updating vendor with ID:", this.vendor._id);
-        console.log("📦 Update payload:", updatedVendor);
+        console.log("ðŸ”„ Updating vendor with ID:", this.vendor._id);
+        console.log("ðŸ“¦ Update payload:", updatedVendor);
 
-        this.http.put(`https://speak2-eatbackend.vercel.app/api/vendor/${this.vendor._id}`, updatedVendor)
+        this.http.put(`/api/vendor/${this.vendor._id}`, updatedVendor)
             .subscribe({
                 next: (response: any) => {
-                    console.log('✓ Profile updated successfully:', response);
+                    console.log('âœ“ Profile updated successfully:', response);
                     this.showModal('success', 'Profile Updated', 'Your profile has been updated successfully!');
                     this.isEditingProfile = false;
                     this.activeTab = 'profile';
                 },
                 error: (error) => {
-                    console.error('✗ Error updating profile:', error);
+                    console.error('âœ— Error updating profile:', error);
                     console.error('HTTP Status:', error.status);
                     console.error('Error Response:', error.error);
                     const errorMsg = error.error?.message || error.error?.error || 'Please try again.';
@@ -1479,8 +1479,8 @@ export class VendorComponent implements OnInit, OnDestroy {
         this.productService.updateProduct(productId as string, formData).subscribe({
             next: (response: any) => {
                 this.isUpdatingProduct = false;
-                this.updateProductSuccess = '✓ Product updated successfully!';
-                console.log('✓ Product updated:', response);
+                this.updateProductSuccess = 'âœ“ Product updated successfully!';
+                console.log('âœ“ Product updated:', response);
 
                 // Update the product in the local list
                 const index = this.products.findIndex(p => p._id === productId || p.id === productId);
@@ -1499,7 +1499,7 @@ export class VendorComponent implements OnInit, OnDestroy {
             },
             error: (error: any) => {
                 this.isUpdatingProduct = false;
-                console.error('✗ Error updating product:', error);
+                console.error('âœ— Error updating product:', error);
                 const errorMsg = error.error?.message || error.message || 'Failed to update product. Please try again.';
                 this.updateProductError = errorMsg;
             }
@@ -1532,7 +1532,7 @@ export class VendorComponent implements OnInit, OnDestroy {
 
     loadOrderHistory(vendorId: string) {
         this.orderLoading = true;
-        this.http.get(`https://speak2-eatbackend.vercel.app/api/order/vendor/${vendorId}/list`)
+        this.http.get(`/api/order/vendor/${vendorId}/list`)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
@@ -1571,15 +1571,15 @@ export class VendorComponent implements OnInit, OnDestroy {
                         this.totalOrderAmount = this.allOrders.reduce((sum, order) => sum + (order.total || 0), 0);
                         this.filterOrders();
                         this.orderLoading = false;
-                        console.log('✓ Orders loaded:', this.allOrders.length, 'items');
+                        console.log('âœ“ Orders loaded:', this.allOrders.length, 'items');
                     } catch (error) {
-                        console.error('✗ Error processing orders:', error);
+                        console.error('âœ— Error processing orders:', error);
                         this.orderLoading = false;
                         this.showModal('error', 'Error Processing Orders', 'Failed to process order data. Please try again.');
                     }
                 },
                 error: (error) => {
-                    console.error('✗ Error loading orders:', error);
+                    console.error('âœ— Error loading orders:', error);
                     this.orderLoading = false;
                     this.showModal('error', 'Error Loading Orders', 'Failed to load order history. Please try again.');
                 }
@@ -1589,7 +1589,7 @@ export class VendorComponent implements OnInit, OnDestroy {
     loadTransactionHistory(vendorId: string) {
         this.transactionLoading = true;
         // Use the new simple endpoint that returns just the array
-        this.http.get(`https://speak2-eatbackend.vercel.app/api/withdrawals/vendor/${vendorId}/list`)
+        this.http.get(`/api/withdrawals/vendor/${vendorId}/list`)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (response: any) => {
@@ -1614,15 +1614,15 @@ export class VendorComponent implements OnInit, OnDestroy {
                             .reduce((sum, t) => sum + (t.amount || 0), 0);
                         this.filterTransactions();
                         this.transactionLoading = false;
-                        console.log('✓ Transactions loaded:', this.allTransactions.length, 'items');
+                        console.log('âœ“ Transactions loaded:', this.allTransactions.length, 'items');
                     } catch (error) {
-                        console.error('✗ Error processing transactions:', error);
+                        console.error('âœ— Error processing transactions:', error);
                         this.transactionLoading = false;
                         this.showModal('error', 'Error Processing Transactions', 'Failed to process transaction data. Please try again.');
                     }
                 },
                 error: (error) => {
-                    console.error('✗ Error loading transactions:', error);
+                    console.error('âœ— Error loading transactions:', error);
                     this.transactionLoading = false;
                     this.showModal('error', 'Error Loading Transactions', 'Failed to load transaction history. Please try again.');
                 }
@@ -1766,13 +1766,13 @@ export class VendorComponent implements OnInit, OnDestroy {
                 'Order ID': order._id?.slice(0, 8),
                 'Date': this.formatDate(order.orderDate),
                 'Customer': order.customerName,
-                'Amount': `₹${order.total}`,
+                'Amount': `â‚¹${order.total}`,
                 'Status': order.status,
                 'Address': order.deliveryAddress
             }))
             : this.paginatedTransactions.map(t => ({
                 'Transaction ID': t._id?.slice(0, 8),
-                'Amount': `₹${t.amount}`,
+                'Amount': `â‚¹${t.amount}`,
                 'Status': t.status,
                 'Requested': this.formatDate(t.requestedAt),
                 'Processed': this.formatDate(t.processedAt),
@@ -1802,3 +1802,4 @@ export class VendorComponent implements OnInit, OnDestroy {
         this.router.navigate(['/login']);
     }
 }
+

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -70,7 +70,7 @@ export class AccountDetailsComponent implements OnInit {
 
   loadUserProfile(): void {
     if (!this.userId) return;
-    this.http.get(`https://speak2-eatbackend.vercel.app/api/auth/user/${this.userId}`).subscribe({
+    this.http.get(`/api/auth/user/${this.userId}`).subscribe({
       next: (data: any) => {
         this.userDetails = data.user;
         console.log('User Profile Loaded:', this.userDetails);
@@ -113,7 +113,7 @@ export class AccountDetailsComponent implements OnInit {
 
     console.log('Updating profile:', profileData);
 
-    this.http.put(`https://speak2-eatbackend.vercel.app/api/auth/user/${this.userId}`, profileData).subscribe({
+    this.http.put(`/api/auth/user/${this.userId}`, profileData).subscribe({
       next: (res: any) => {
         Swal.fire('Success', 'Profile updated successfully!', 'success');
         this.isEditingProfile = false;
@@ -206,3 +206,4 @@ export class AccountDetailsComponent implements OnInit {
     this.router.navigate(['/']);
   }
 }
+

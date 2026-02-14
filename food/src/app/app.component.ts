@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+﻿import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
 import { VoiceButtonComponent } from './voice-button/voice-button.component';
 import { NotificationComponent } from './shared/notification/notification.component';
@@ -101,3 +101,4 @@ export class AppComponent implements OnInit {
     alert('Your session has expired due to inactivity (30 minutes). Please login again.');
   }
 }
+

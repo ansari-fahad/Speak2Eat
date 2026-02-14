@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastService, ToastMessage } from '../../services/toast.service';
 
@@ -20,3 +20,4 @@ export class ToastComponent implements OnInit {
         });
     }
 }
+

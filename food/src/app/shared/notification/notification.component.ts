@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SocketService } from '../../services/socket.service';
 import { Router } from '@angular/router';
@@ -28,19 +28,19 @@ export class NotificationComponent implements OnInit {
 
         // 2. Listen for real-time updates
         this.socketService.listen('orderStatusUpdated').subscribe((data) => {
-            console.log('🔔 Socket notification received:', data);
+            console.log('ðŸ”” Socket notification received:', data);
 
             const currentUserId = localStorage.getItem('userId');
             // Handle various structures of userId that might come from backend (string or object with _id)
             const eventUserId = data.userId || (data.updatedOrder?.userId?._id) || (data.updatedOrder?.userId);
 
-            console.log(`🔔 ID Check -- Event: ${eventUserId}, Local: ${currentUserId}`);
+            console.log(`ðŸ”” ID Check -- Event: ${eventUserId}, Local: ${currentUserId}`);
 
             if (currentUserId && String(eventUserId) === String(currentUserId)) {
-                console.log('✅ User ID matched! Displaying notification.');
+                console.log('âœ… User ID matched! Displaying notification.');
                 this.handleNotification(data);
             } else {
-                console.log('❌ User ID did not match.');
+                console.log('âŒ User ID did not match.');
             }
         });
     }
@@ -115,7 +115,7 @@ export class NotificationComponent implements OnInit {
                 );
 
                 if (activeOrder) {
-                    console.log('🔄 Found active order, restoring notification:', activeOrder._id);
+                    console.log('ðŸ”„ Found active order, restoring notification:', activeOrder._id);
                     // Construct data object to match socket structure
                     const notificationData = {
                         status: activeOrder.status,
@@ -138,3 +138,4 @@ export class NotificationComponent implements OnInit {
         this.show = false;
     }
 }
+

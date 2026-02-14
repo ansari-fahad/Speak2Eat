@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -26,7 +26,7 @@ export interface AccountDetails {
   providedIn: 'root'
 })
 export class AccountService {
-  private apiUrl = 'https://speak2-eatbackend.vercel.app/api/account';
+  private apiUrl = '/api/account';
 
   constructor(private http: HttpClient) { }
 
@@ -59,3 +59,4 @@ export class AccountService {
     return this.http.patch(`${this.apiUrl}/${accountId}/reject`, { adminId, rejectionReason });
   }
 }
+

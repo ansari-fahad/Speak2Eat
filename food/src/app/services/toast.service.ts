@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 export interface ToastMessage {
@@ -21,3 +21,4 @@ export class ToastService {
         }, duration);
     }
 }
+

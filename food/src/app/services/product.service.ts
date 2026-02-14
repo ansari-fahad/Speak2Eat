@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -20,7 +20,7 @@ export interface Product {
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'https://speak2-eatbackend.vercel.app/api/products';
+  private apiUrl = '/api/products';
 
   constructor(private http: HttpClient) { }
 
@@ -65,3 +65,4 @@ export class ProductService {
     return this.http.put<any>(`${this.apiUrl}/${id}`, formData);
   }
 }
+
