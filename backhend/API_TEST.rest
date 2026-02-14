@@ -1,0 +1,285 @@
+
+POST http://localhost:3000/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "name": "admin",
+  "password": "admin@gmail.com",
+  "role": "admin",
+  "phone": "1234567890"
+}
+###
+POST http://localhost:3000/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "user@gmail.com",
+  "name": "user",
+  "password": "user@gmail.com",
+  "role": "user",
+  "phone": "2134567890"
+}
+###
+POST http://localhost:3000/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "rider@gmail.com",
+  "name": "Rider",
+  "password": "rider@gmail.com",
+  "role": "rider",
+  "phone": "2134522440"
+}
+
+
+###
+POST http://localhost:3000/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "vendor@gmail.com",
+  "name": "Vendor",
+  "password": "vendor@gmail.com",
+  "role": "vendor",
+  "phone": "3123456789"
+}
+
+###
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "vendor1@gmail.com",
+  "password": "password123"
+}
+
+###
+
+### ====== CATEGORY ENDPOINTS ======
+
+POST http://localhost:3000/api/category/add-category
+Content-Type: application/json
+
+{
+  "name": "Pizza"
+}
+
+###
+
+GET http://localhost:3000/api/category/
+Accept: application/json
+
+
+
+### Create Product (with image upload)
+POST http://localhost:3000/api/product/add-products
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="vendor_id"
+
+65a1234567890abcdef12345
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Margherita Pizza
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="category_id"
+
+pizza
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="price"
+
+399
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="stock"
+
+50
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+Classic tomato and fresh mozzarella
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="ingredients"
+
+tomato,mozzarella,basil,olive oil
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="pizza.jpg"
+Content-Type: image/jpeg
+
+< ./uploads/pizza.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+### Get all products
+GET http://localhost:3000/api/product/
+Accept: application/json
+
+###
+
+### Get products by vendor ID
+GET http://localhost:3000/api/product/vendor/65a1234567890abcdef12345
+Accept: application/json
+
+###
+
+### Get products by category ID
+GET http://localhost:3000/api/product/category/pizza
+Accept: application/json
+
+###
+
+### Get single product by ID
+GET http://localhost:3000/api/product/65b1234567890abcdef67890
+Accept: application/json
+
+###
+
+### ====== VENDOR ENDPOINTS ======
+
+GET http://localhost:3000/api/vendor/65a1234567890abcdef12345
+Accept: application/json
+
+###
+
+PUT http://localhost:3000/api/vendor/65a1234567890abcdef12345
+Content-Type: application/json
+
+{
+  "shopName": "My Pizza Shop",
+  "shopDescription": "Best pizza in town",
+  "shopAddress": "123 Main St",
+  "shopContactNumber": "+1-555-0123",
+  "shopidentificationNumber": "SHOP-001"
+}
+
+###
+  path: 'uploads/products/167122345234-1766696684163.jpg',
+  size: 123456
+}
+
+
+
+###
+POST http://localhost:3000/api/product/add-product
+
+vendor_id=69627a5611f9ee14966d6be1
+name=Smartphone
+description=A high-end smartphone with advanced features.
+category_id=["64b8f0f2c2a1f2b3c4d5e6f7"]
+ingredients=["Plastic","Glass","Metal"]
+image=< I:/Picture/1766696684163.jpg
+
+###
+POST http://localhost:3000/api/product/add-product
+Content-Type: application/json
+
+{
+  "vendor_id": "69627a5611f9ee14966d6be1",
+  "name": "Smartphone",
+  "description": "A high-end smartphone with advanced features.",
+  "category_id": ["64b8f0f2c2a1f2b3c4d5e6f7"],
+  "ingredients": ["Plastic","Glass","Metal"]
+}
+image=< I:/Picture/1766696684163.jpg
+
+
+###
+POST http://localhost:3000/api/product/add-product
+
+vendor_id=69627a5611f9ee14966d6be1
+name=Smartphone
+description=A high-end smartphone with advanced features.
+category_id=["64b8f0f2c2a1f2b3c4d5e6f7"]
+ingredients=["Plastic","Glass","Metal"]
+image=< I:/Picture/1766696684163.jpg
+
+
+
+###
+POST http://localhost:3000/api/product/add-product
+
+req.body: {
+  "vendor_id": "69627a5611f9ee14966d6be1",
+  "name": "Smartphone",
+  "description": "A high-end smartphone with advanced features.",
+  "category_id": "[\"64b8f0f2c2a1f2b3c4d5e6f7\"]",
+  "ingredients": "[\"Plastic\",\"Glass\",\"Metal\"]"
+}
+
+req.file: {
+  "fieldname": "image",
+  "originalname": "1766696684163.jpg",
+  "path": "uploads/products/1671234567890-1766696684163.jpg",
+  "mimetype": "image/jpeg",
+  ...
+}
+
+
+###
+POST http://localhost:3000/api/product/add-products
+Content-Type: multipart/form-data
+
+vendor_id=63f0c1b9e1b4f0a1c2d3e4f5
+category_id=64a0c1b9e1b4f0a1c2d3e123
+name=Organic Honey
+description=Pure organic honey
+ingredients=Honey,Pollen
+image=@I:\Picture\1766696684163.jpg
+
+
+###
+POST http://localhost:3000/api/product/add-products
+Content-Type: multipart/form-data
+
+vendor_id=63f0c1b9e1b4f0a1c2d3e4f5
+category_id=64a0c1b9e1b4f0a1c2d3e123
+name=Organic Honey
+description=Pure organic honey
+ingredients=Honey,Pollen
+image=@D:/SEM-8/MEAN-STACK/images/honey.jpg
+
+
+
+
+###
+GET http://localhost:3000/api/products/all
+Accept: application/json
+
+DELETE http://localhost:3000/api/products/<product_id>
+
+
+### --- CART ---
+
+### Add Item to Cart (Create Cart if not exists)
+POST http://localhost:3000/api/cart/create
+Content-Type: application/json
+
+{
+  "userId": "65b1234567890abcdef12345",
+  "productId": "65b1234567890abcdef67890",
+  "vendorId": "65a1234567890abcdef12345",
+  "quantity": 1
+}
+
+###
+
+### Get Cart by User ID
+GET http://localhost:3000/api/cart/65b1234567890abcdef12345
+Accept: application/json
+
+###
+
+### Remove Cart (Delete)
+DELETE http://localhost:3000/api/cart/65b1234567890abcdef12345
+
+###
+
+### ====== ADMIN ENDPOINTS ======
+
+### Get Dashboard Stats
+GET http://localhost:3000/api/admin/dashboard-stats
+Accept: application/json
+

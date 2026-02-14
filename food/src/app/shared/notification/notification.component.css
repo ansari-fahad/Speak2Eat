@@ -1,0 +1,180 @@
+.notification-container {
+  position: fixed;
+  bottom: 80px;
+  /* Moved up as requested */
+  right: 30px;
+  /* Desktop: Bottom Right */
+  width: 360px;
+  background: transparent;
+  z-index: 10000;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes slideInRight {
+  from {
+    right: -400px;
+    opacity: 0;
+  }
+
+  to {
+    right: 30px;
+    opacity: 1;
+  }
+}
+
+.notification-content {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+  background: white;
+}
+
+.notification-header {
+  background: linear-gradient(135deg, #2b2b3f 0%, #1a1a24 100%);
+  color: white;
+  padding: 16px 20px 24px 20px;
+  /* Extra bottom padding for overlap */
+  position: relative;
+  cursor: pointer;
+  /* Indicates it can be closed */
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.brand-text {
+  font-weight: 900;
+  font-style: italic;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+}
+
+.x-divider {
+  color: #a0a0b0;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.partner-text {
+  font-weight: 700;
+  color: #e3e3e3;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.promo-text {
+  color: #d0d0e0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* The White Card Part */
+.order-status-card {
+  background: #ffffff;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.vendor-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  cursor: pointer;
+  /* Clickable */
+}
+
+.vendor-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  background: #fff;
+  border-radius: 50%;
+  /* Circle icon as per common UI */
+  border: 1px solid #eee;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.vendor-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.vendor-details h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+.vendor-details p {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #777;
+  font-weight: 500;
+}
+
+.action-link {
+  color: #e23744;
+  /* Zomato Red */
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.arrival-time {
+  background: #25a044;
+  /* Green */
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  text-align: center;
+  min-width: 70px;
+  margin-left: 12px;
+  box-shadow: 0 4px 8px rgba(37, 160, 68, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  /* Clickable */
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.arrival-time:hover {
+  transform: scale(1.05);
+  background-color: #1e8736;
+}
+
+.time-label {
+  font-size: 10px;
+  opacity: 0.9;
+  margin-bottom: 2px;
+  width: 100%;
+}
+
+.time-value {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}

@@ -1,0 +1,90 @@
+<div class="account-bg-elements">
+    <div class="floating-circle circle-1"></div>
+    <div class="floating-circle circle-2"></div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar"
+    style="position: fixed; top: 0; width: 100%; padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(15px); background: rgba(255, 255, 255, 0.8); z-index: 100; box-sizing: border-box; border-bottom: 1px solid rgba(255, 255, 255, 0.5);">
+    <a routerLink="/" class="logo"
+        style="text-decoration: none; font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; background: linear-gradient(45deg, #ff4e50, #f9d423); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Speak2Eat</a>
+
+    <div class="auth-buttons">
+        <a routerLink="/cart" class="btn btn-cart"
+            style="margin-left: 1rem; padding: 0.7rem 1.4rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: white; background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%); box-shadow: 0 4px 15px rgba(255, 94, 98, 0.3);">🛒
+            Cart</a>
+        <a routerLink="/orders" class="btn btn-orders"
+            style="margin-left: 1rem; padding: 0.7rem 1.4rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: #444; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); box-shadow: 0 4px 15px rgba(255, 154, 158, 0.2);">📦
+            Orders</a>
+        <a routerLink="/account" class="btn btn-vendor"
+            style="margin-left: 1rem; padding: 0.7rem 1.4rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">👤
+            Profile</a>
+        <button (click)="logout()" class="btn btn-signin"
+            style="margin-left: 1rem; padding: 0.7rem 1.4rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: #333; background: white; border: 1px solid #eee; cursor: pointer;">Logout</button>
+    </div>
+</nav>
+
+<div class="cart-container" style="margin-top: 100px;">
+    <div class="cart-header">
+        <h1>Your Shopping Cart</h1>
+        <a routerLink="/" class="back-link">← Continue Shopping</a>
+    </div>
+
+    <div *ngIf="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading your cravings...</p>
+    </div>
+
+    <div *ngIf="!loading && (!cart || !cart.products || cart.products.length === 0)" class="empty-state">
+        <div class="empty-icon">🛒</div>
+        <h2>Your cart is empty</h2>
+        <p>Looks like you haven't added anything yet.</p>
+        <a routerLink="/" class="btn-shop">Start Shopping</a>
+    </div>
+
+    <div *ngIf="!loading && cart && cart.products && cart.products.length > 0" class="cart-content">
+
+        <div class="cart-items">
+            <div class="cart-item" *ngFor="let item of cart.products; let i = index">
+                <div class="item-image">
+                    <img [src]="getImageUrl(item.productId.image)" [alt]="item.productId.name">
+                </div>
+                <div class="item-details">
+                    <h3>{{ item.productId.name }}</h3>
+                    <p class="vendor">Vendor: {{ item.vendorId?.shopName || 'Unknown Vendor' }}</p>
+                    <p class="price">{{ item.productId.price | currency:'INR' }}</p>
+                </div>
+                <div class="item-actions">
+                    <div class="qty-control">
+                        <button (click)="updateQuantity(item, -1)" [disabled]="item.quantity <= 1">-</button>
+                        <span>{{ item.quantity }}</span>
+                        <button (click)="updateQuantity(item, 1)">+</button>
+                    </div>
+                    <button class="btn-remove" (click)="removeItem(i)">✕</button>
+                </div>
+                <div class="item-total">
+                    {{ (item.productId.price * item.quantity) | currency:'INR' }}
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-summary">
+            <h2>Order Summary</h2>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>{{ totalPrice | currency:'INR' }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Delivery Fee</span>
+                <span>₹40.00</span>
+            </div>
+            <div class="measure-line"></div>
+            <div class="summary-total">
+                <span>Total</span>
+                <span>{{ (totalPrice + 40) | currency:'INR' }}</span>
+            </div>
+            <button class="btn-checkout" (click)="checkout()">Proceed to Checkout</button>
+        </div>
+
+    </div>
+</div>

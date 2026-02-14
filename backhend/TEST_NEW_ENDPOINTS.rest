@@ -1,0 +1,16 @@
+### Test the new API endpoints
+
+# Replace with your actual vendor ID
+@vendorId = 69779fdf41f074b17b1e0660d
+
+### Get orders from history collection
+GET http://localhost:3000/api/orders/vendor/{{vendorId}}/list
+Accept: application/json
+
+### Get transactions from withdrawals collection
+GET http://localhost:3000/api/withdrawals/vendor/{{vendorId}}/list
+Accept: application/json
+
+### Debug - check data count
+GET http://localhost:3000/api/debug/check-data/{{vendorId}}
+Accept: application/json

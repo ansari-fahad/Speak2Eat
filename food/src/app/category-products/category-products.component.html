@@ -1,0 +1,128 @@
+<div class="category-page">
+    <!-- Hero Section -->
+    <section class="category-hero">
+        <div class="hero-content">
+            <div class="breadcrumb">
+                <a routerLink="/">Home</a>
+                <span class="separator">→</span>
+                <span class="current">{{ categoryName }}</span>
+            </div>
+            <h1 class="category-title">{{ categoryName }}</h1>
+            <p class="category-description">Discover our amazing {{ categoryName.toLowerCase() }} collection</p>
+            <div class="category-stats">
+                <div class="stat-item">
+                    <span class="stat-icon">🍽️</span>
+                    <span class="stat-number">{{ products.length }}</span>
+                    <span class="stat-label">Items</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⭐</span>
+                    <span class="stat-number">4.8</span>
+                    <span class="stat-label">Rating</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🚀</span>
+                    <span class="stat-number">30min</span>
+                    <span class="stat-label">Delivery</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-decoration">
+            <div class="floating-circle circle-1"></div>
+            <div class="floating-circle circle-2"></div>
+            <div class="floating-circle circle-3"></div>
+        </div>
+    </section>
+
+    <!-- Vendors Section -->
+    <section class="vendors-section" *ngIf="vendors.length > 0 && !isLoading">
+        <div class="container">
+            <h3 class="section-subtitle">Vendors selling {{ categoryName }}</h3>
+            <div class="vendors-row">
+                <div class="vendor-card"
+                     *ngFor="let v of vendors"
+                     [class.active]="selectedVendorId === v.id"
+                     (click)="selectVendor(v)">
+                    <div class="vendor-name">{{ v.name }}</div>
+                    <div class="vendor-meta">{{ v.totalProducts }} items</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section class="filters-section">
+        <div class="container">
+            <div class="filters-wrapper">
+                <div class="filter-group">
+                    <label>Sort By:</label>
+                    <select class="filter-select" [(ngModel)]="sortBy" (change)="sortProducts()">
+                        <option value="popular">Most Popular</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Highest Rated</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Price Range:</label>
+                    <select class="filter-select" [(ngModel)]="priceRange" (change)="filterByPrice()">
+                        <option value="all">All Prices</option>
+                        <option value="0-500">Under ₹500</option>
+                        <option value="500-1000">₹500 - ₹1000</option>
+                        <option value="1000+">Above ₹1000</option>
+                    </select>
+                </div>
+                <div class="search-box">
+                    <input type="text" placeholder="Search products..." [(ngModel)]="searchQuery"
+                        (input)="searchProducts()">
+                    <span class="search-icon">🔍</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="products-section">
+        <div class="container">
+            <div class="products-grid">
+                <div class="product-card" *ngFor="let product of filteredProducts; let i = index" [attr.data-index]="i"
+                    (click)="navigateToKitchen(product)">
+                    <div class="product-badge" *ngIf="product.badge">{{ product.badge }}</div>
+                    <div class="product-image-wrapper">
+                        <img [src]="getImageUrl(product.image)" [alt]="product.name" class="product-image">
+                        <div class="image-overlay">
+                            <button class="quick-view-btn">Quick View</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-count">({{ product.reviews }})</span>
+                        </div>
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <p class="product-desc">{{ product.description }}</p>
+                        <div class="product-footer">
+                            <div class="price-section">
+                                <span class="current-price">₹{{ product.price }}</span>
+                                <span class="original-price" *ngIf="product.originalPrice">₹{{ product.originalPrice
+                                    }}</span>
+                            </div>
+                            <button class="add-to-cart-btn" (click)="addToCart(product, $event)">
+                                <span class="btn-icon">🛒</span>
+                                <span class="btn-text">Add</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-glow"></div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" *ngIf="filteredProducts.length === 0">
+                <div class="empty-icon">🔍</div>
+                <h3>No products found</h3>
+                <p>Try adjusting your filters or search query</p>
+            </div>
+        </div>
+    </section>
+</div>

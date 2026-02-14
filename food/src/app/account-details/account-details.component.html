@@ -1,0 +1,118 @@
+<div class="account-bg-elements">
+  <div class="floating-circle circle-1"></div>
+  <div class="floating-circle circle-2"></div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar"
+  style="position: fixed; top: 0; width: 100%; padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(15px); background: rgba(255, 255, 255, 0.8); z-index: 100; box-sizing: border-box; border-bottom: 1px solid rgba(255, 255, 255, 0.5);">
+  <a routerLink="/" class="logo"
+    style="text-decoration: none; font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; background: linear-gradient(45deg, #ff4e50, #f9d423); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Speak2Eat</a>
+
+  <div class="auth-buttons">
+    <a routerLink="/cart" class="btn btn-cart"
+      style="margin-left: 1rem; padding: 0.7rem 1.4rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: white; background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%); box-shadow: 0 4px 15px rgba(255, 94, 98, 0.3);">🛒
+      Cart</a>
+    <a routerLink="/orders" class="btn btn-orders"
+      style="margin-left: 1rem; padding: 0.7rem 1.4rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: #444; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); box-shadow: 0 4px 15px rgba(255, 154, 158, 0.2);">📦
+      Orders</a>
+
+    <button (click)="logout()" class="btn btn-signin"
+      style="margin-left: 1rem; padding: 0.7rem 1.4rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: #333; background: white; border: 1px solid #eee; cursor: pointer;">Logout</button>
+  </div>
+</nav>
+
+<div class="account-details-container" style="margin-top: 100px;">
+  <div class="account-header">
+    <h1>{{ userType === 'vendor' ? 'Vendor' : 'User' }} Profile & Account</h1>
+    <p class="subtitle">Manage your personal profile and bank account information</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading details...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="account-form-wrapper">
+
+    <!-- Personal Information Section -->
+    <div class="form-section profile-section" *ngIf="userDetails" (dblclick)="toggleEditProfile()">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="margin-bottom: 0;">Personal Information</h2>
+        <span *ngIf="!isEditingProfile" style="font-size: 0.8rem; color: #667eea; cursor: pointer;">(Double click to
+          edit)</span>
+      </div>
+
+      <!-- View Mode -->
+      <div class="profile-grid" *ngIf="!isEditingProfile"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
+        <div class="profile-item">
+          <label style="font-weight: bold; color: #666; display: block; margin-bottom: 5px;">Name</label>
+          <div style="font-size: 1.1rem; font-weight: 500;">{{ userDetails.name }}</div>
+        </div>
+        <div class="profile-item">
+          <label style="font-weight: bold; color: #666; display: block; margin-bottom: 5px;">Email</label>
+          <div style="font-size: 1.1rem; font-weight: 500;">{{ userDetails.email }}</div>
+        </div>
+        <div class="profile-item">
+          <label style="font-weight: bold; color: #666; display: block; margin-bottom: 5px;">Phone</label>
+          <div style="font-size: 1.1rem; font-weight: 500;">{{ userDetails.number || 'Not provided' }}</div>
+        </div>
+        <div class="profile-item" style="grid-column: 1 / -1;">
+          <label style="font-weight: bold; color: #666; display: block; margin-bottom: 5px;">Address</label>
+          <div style="font-size: 1.1rem; font-weight: 500;">
+            {{ (userDetails.address?.street || '') + ' ' + (userDetails.address?.city || '') + ' ' +
+            (userDetails.address?.state || '') + ' ' + (userDetails.address?.postalCode || '') }}
+            <span
+              *ngIf="!userDetails.address?.street && !userDetails.address?.city && !userDetails.address?.state && !userDetails.address?.postalCode"
+              style="color: #999; font-style: italic; font-size: 0.9rem;">No address provided</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" *ngIf="isEditingProfile">
+        <div class="profile-grid"
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
+          <div class="profile-item">
+            <label style="font-weight: bold; color: #666; display: block; margin-bottom: 5px;">Name</label>
+            <input type="text" formControlName="name" class="form-control"
+              style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+          </div>
+          <div class="profile-item">
+            <label style="font-weight: bold; color: #666; display: block; margin-bottom: 5px;">Email</label>
+            <input type="email" formControlName="email" class="form-control"
+              style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+          </div>
+          <div class="profile-item">
+            <label style="font-weight: bold; color: #666; display: block; margin-bottom: 5px;">Phone</label>
+            <input type="text" formControlName="phone" class="form-control"
+              style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+          </div>
+          <div class="profile-item" style="grid-column: 1 / -1;">
+            <label style="font-weight: bold; color: #666; display: block; margin-bottom: 5px;">Address (Street, City,
+              State, ZIP)</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px;">
+              <input type="text" formControlName="street" placeholder="Street"
+                style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+              <input type="text" formControlName="city" placeholder="City"
+                style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+              <input type="text" formControlName="state" placeholder="State"
+                style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+              <input type="text" formControlName="postalCode" placeholder="ZIP"
+                style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button type="button" (click)="toggleEditProfile()"
+            style="padding: 8px 16px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">Cancel</button>
+          <button type="submit"
+            style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">Save
+            Changes</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>

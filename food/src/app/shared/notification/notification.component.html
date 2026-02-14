@@ -1,0 +1,29 @@
+<div class="notification-container" *ngIf="show">
+    <div class="notification-content">
+        <!-- Dark Header -->
+        <div class="notification-header" (click)="close()">
+            <div class="brand-row">
+                <span class="brand-text">Speak 2 Eat </span>
+            </div>
+            <div class="promo-text">Get 10% cashback on all</div>
+        </div>
+
+        <!-- White Card Body -->
+        <div class="order-status-card">
+            <div class="vendor-info" (click)="navigateToTracking()">
+                <div class="vendor-icon">
+                    <span role="img" aria-label="cooking">🍲</span>
+                </div>
+                <div class="vendor-details">
+                    <h3>{{ orderData?.updatedOrder?.products[0]?.vendorId?.shopName || 'Vendor' }}</h3>
+                    <p>{{ mainMessage }} <span class="action-link" *ngIf="showTime"> | Track</span></p>
+                </div>
+            </div>
+
+            <div class="arrival-time" *ngIf="showTime" (click)="navigateToTracking()">
+                <div class="time-label">{{ timeMessage }}</div>
+                <div class="time-value">{{ remainingTime }}</div>
+            </div>
+        </div>
+    </div>
+</div>

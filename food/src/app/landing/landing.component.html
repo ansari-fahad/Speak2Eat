@@ -1,0 +1,458 @@
+<div class="landing-container">
+  <app-notification *ngIf="isLoggedIn()"></app-notification>
+  <app-toast></app-toast>
+  <!-- Removed 3D Background -->
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">Speak2Eat</div>
+    <!-- <div class="nav-links">
+      <a href="#section-1">Home</a>
+      <a href="#section-2">How it Works</a>
+      <a href="#section-3">Menu</a>
+      <a href="#section-4">Reviews</a>
+    </div> -->
+
+
+    <div class="auth-buttons">
+      <ng-container *ngIf="!isLoggedIn(); else loggedIn">
+        <a routerLink="/login" class="btn btn-signin">Sign In</a>
+        <a routerLink="/signup" class="btn btn-signup">Sign Up</a>
+      </ng-container>
+      <ng-template #loggedIn>
+        <!-- <a routerLink="/admin" class="btn btn-admin">👑 Admin</a>
+        <a routerLink="/vendor" class="btn btn-vendor">🏪 Vendor</a> -->
+        <!-- <button (click)="logout()" class="btn btn-signin">Logout</button>
+          -->
+        <a routerLink="/cart" class="btn btn-cart">🛒 Cart</a>
+        <a routerLink="/orders" class="btn btn-orders">📦 Orders</a>
+        <a routerLink="/account" class="btn btn-vendor">👤 Profile</a>
+        <button (click)="logout()" class="btn btn-signin">Logout</button>
+      </ng-template>
+    </div>
+  </nav>
+
+  <!-- Section 1: Hero -->
+  <section id="section-1" class="section hero-section">
+    <!-- Animated Background Elements -->
+    <div class="hero-bg-elements">
+      <div class="floating-circle circle-1"></div>
+      <div class="floating-circle circle-2"></div>
+      <div class="floating-circle circle-3"></div>
+      <div class="floating-diamond diamond-1">◆</div>
+      <div class="floating-diamond diamond-2">◆</div>
+      <div class="floating-diamond diamond-3">◆</div>
+      <div class="floating-diamond diamond-4">◆</div>
+    </div>
+
+    <!-- Floating Food Particles -->
+    <div class="food-particles">
+      <span class="particle">🍕</span>
+      <span class="particle">🍔</span>
+      <span class="particle">🍟</span>
+      <span class="particle">🌮</span>
+      <span class="particle">🍜</span>
+      <span class="particle">🍰</span>
+    </div>
+
+    <div class="content hero-content glass-card-enhanced">
+      <div class="badge-wrapper">
+        <span class="badge-new-enhanced">
+          <span class="badge-icon">✨</span>
+          NEW IN TOWN
+          <span class="badge-pulse"></span>
+        </span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="title-line">Crave. Order.</span>
+        <span class="title-line highlight-line">
+          <span class="highlight-text">Devour.</span>
+          <span class="highlight-underline"></span>
+        </span>
+      </h1>
+
+      <p class="hero-description">
+        The smartest way to get your favorite food delivered.
+        <span class="text-highlight">Real-time tracking</span>,
+        <span class="text-highlight">premium vendors</span>, and
+        <span class="text-highlight">unforgettable taste</span>.
+      </p>
+
+      <div class="search-bar-enhanced">
+        <div class="search-icon">🔍</div>
+        <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()"
+          placeholder="What are you craving? (e.g. Sushi, Burger)" class="search-input">
+        <button class="btn-search-enhanced" (click)="onSearch()">
+          <span class="btn-text">Search</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+
+      <div class="stats-row-enhanced">
+        <div class="stat-card">
+          <div class="stat-icon">🏪</div>
+          <strong class="stat-number">500+</strong>
+          <span class="stat-label">Restaurants</span>
+          <div class="stat-glow"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <strong class="stat-number">24/7</strong>
+          <span class="stat-label">Delivery</span>
+          <div class="stat-glow"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⏱️</div>
+          <strong class="stat-number">30m</strong>
+          <span class="stat-label">Avg Time</span>
+          <div class="stat-glow"></div>
+        </div>
+      </div>
+
+      <!-- Trust Indicators -->
+      <div class="trust-indicators">
+        <div class="trust-item">
+          <span class="trust-icon">✓</span>
+          <span class="trust-text">Safe & Hygienic</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon">✓</span>
+          <span class="trust-text">Live Order Tracking</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon">✓</span>
+          <span class="trust-text">Lightning Fast Delivery</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Premium Food Categories -->
+  <section id="section-categories" class="section categories-section">
+    <div class="categories-header">
+      <span class="badge-category">Discover</span>
+      <h2 class="section-title gradient-text">Explore Delicious Categories</h2>
+      <p class="section-subtitle">From comfort food to exotic cuisines, find exactly what you're craving</p>
+    </div>
+
+    <div class="category-grid-premium">
+      <!-- Burgers -->
+      <div class="category-card" *ngFor="let category of categories" (click)="navigateToCategory(category.name)">
+        <div class="category-image-wrapper">
+          <img [src]="category.image" [alt]="category.name" class="category-img">
+          <div class="category-overlay"></div>
+          <div class="category-icon">
+            {{ category.icon }}
+          </div>
+        </div>
+        <div class="category-content">
+          <h3>{{ category.name }}</h3>
+          <p>{{ category.realCount !== undefined ? category.realCount + ' Items' : category.itemCount }}</p>
+          <div class="category-shine"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Try Something New -->
+  <section id="section-3" class="section try-new-section">
+    <div class="try-new-container">
+      <div class="try-new-header">
+        <span class="badge-new-items">✨ Fresh Picks</span>
+        <h2 class="section-title magnetic-title">Try Something New</h2>
+        <p class="section-subtitle">Dare to explore flavors you've never experienced before</p>
+        <div class="header-arrows">
+          <button class="arrow-btn prev-btn" (click)="scrollProducts('left')">←</button>
+          <button class="arrow-btn next-btn" (click)="scrollProducts('right')">→</button>
+        </div>
+      </div>
+
+      <div class="try-new-grid">
+        <div class="try-new-card" *ngFor="let product of products" data-tilt (click)="navigateToKitchen(product)">
+          <div class="card-glow"></div>
+          <div class="card-particles"></div>
+          <div class="try-new-image-wrapper">
+            <img [src]="getImageUrl(product.image)" [alt]="product.name" class="try-new-img">
+            <div class="image-overlay"></div>
+
+
+
+            <div class="floating-badge">NEW</div>
+          </div>
+          <div class="try-new-content">
+            <h4 class="shop-name">{{ product.vendor_id?.shopName || 'Shop' | uppercase }}</h4>
+            <h3 class="product-name">{{ product.name | uppercase }}</h3>
+            <div class="product-footer">
+              <span class="product-price">{{ product.price | currency:'INR' }}</span>
+            </div>
+          </div>
+          <div class="card-shine"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Popular Foods Near You -->
+  <section id="section-popular" class="section popular-foods-section">
+    <div class="popular-container">
+      <div class="popular-header">
+        <div class="header-left">
+          <span class="badge-popular">🔥 Trending Now</span>
+          <h2 class="section-title popular-title">Popular Foods Near You</h2>
+          <p class="section-subtitle">Discover what everyone's ordering in your neighborhood</p>
+        </div>
+        <div class="header-right">
+          <a href="#" class="see-all-link">See All →</a>
+        </div>
+      </div>
+
+      <div class="popular-grid">
+        <div class="popular-card" *ngFor="let product of popularProducts; let i = index"
+          [attr.data-animation]="['flip', 'magnetic', 'bounce', 'slide'][i % 4]">
+          <div class="card-inner">
+            <div class="popular-image-container">
+              <img [src]="getImageUrl(product.image)" [alt]="product.name" class="popular-img">
+              <div class="image-gradient"></div>
+              <div class="floating-rating">
+                <span class="star">⭐</span>
+                <span class="rating-value">{{ $any(product).rating }}</span>
+              </div>
+            </div>
+            <div class="popular-content">
+              <h3 class="food-title">{{ product.name | uppercase }}</h3>
+              <p class="food-description">{{ product.description | slice:0:60 }}{{ product.description &&
+                product.description.length > 60 ? '...' : '' }}</p>
+              <div class="card-footer">
+                <span class="food-price">{{ product.price | currency:'INR' }}</span>
+                <button class="btn-add-popular" (click)="addToCart(product)">
+                  <span class="add-text">ADD</span>
+                  <span class="add-icon">+</span>
+                </button>
+              </div>
+            </div>
+            <div class="card-ripple"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Section 4: Become a Partner (New) -->
+  <section id="section-partner" class="section partner-section">
+    <div class="container partner-container">
+      <div class="partner-text">
+        <span class="badge-partner">For Restaurants</span>
+        <h2>Grow your business with Speak2Eat</h2>
+        <p>Join 500+ top-rated restaurants. We handle the logistics, you focus on the food. Increase your revenue by up
+          to 30% in your first month.</p>
+        <div class="partner-stats">
+          <div class="p-stat">
+            <h3>0%</h3>
+            <small>Commission for 30 days</small>
+          </div>
+          <div class="p-stat">
+            <h3>24h</h3>
+            <small>Fast Onboarding</small>
+          </div>
+        </div>
+        <button class="btn-partner">Become a Partner</button>
+      </div>
+      <div class="partner-image">
+        <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=800&q=80"
+          alt="Chef Cooking" class="chef-img">
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Section 5: Promotional Offers Grid -->
+  <section id="section-2" class="section promo-section">
+    <div class="promo-container">
+      <div class="promo-header">
+        <span class="promo-badge">🔥 Hot Deals</span>
+        <h2 class="promo-title">Special Offers Just For You</h2>
+        <p class="promo-subtitle">Grab these amazing deals before they're gone!</p>
+      </div>
+
+      <div class="promo-grid">
+        <!-- Card 1: Super Saver Combo -->
+        <div class="promo-card card-purple" data-aos="fade-up" data-aos-delay="100">
+          <div class="promo-content">
+            <div class="promo-icon">🍗</div>
+            <span class="promo-tag">GOOD TASTE, GOOD MOOD</span>
+            <h3 class="promo-heading">Super Saver<br>Combo Meals</h3>
+            <div class="promo-badge-price">
+              <span class="badge-text">Only</span>
+              <span class="badge-price">₹999</span>
+            </div>
+            <button class="btn-promo">
+              <span>Order Now</span>
+              <span class="arrow">→</span>
+            </button>
+          </div>
+          <div class="promo-image">
+            <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&q=80"
+              alt="Combo Meal">
+          </div>
+          <div class="promo-glow"></div>
+        </div>
+
+        <!-- Card 2: Fresh Desserts -->
+        <div class="promo-card card-teal" data-aos="fade-up" data-aos-delay="200">
+          <div class="promo-content">
+            <div class="promo-icon">🍰</div>
+            <span class="promo-tag">SUPER OFFER</span>
+            <h3 class="promo-heading">Fresh Delicious<br>Dessert</h3>
+            <div class="promo-badge-price">
+              <span class="badge-text">20%</span>
+              <span class="badge-price">OFF</span>
+            </div>
+            <button class="btn-promo">
+              <span>Order Now</span>
+              <span class="arrow">→</span>
+            </button>
+          </div>
+          <div class="promo-image">
+            <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80"
+              alt="Dessert">
+          </div>
+          <div class="promo-glow"></div>
+        </div>
+
+        <!-- Card 3: Pizza Party -->
+        <div class="promo-card card-orange" data-aos="fade-up" data-aos-delay="300">
+          <div class="promo-content">
+            <div class="promo-icon">🍕</div>
+            <span class="promo-tag">WEEKEND SPECIAL</span>
+            <h3 class="promo-heading">Pizza Party<br>Mega Deal</h3>
+            <div class="promo-badge-price">
+              <span class="badge-text">Buy 2</span>
+              <span class="badge-price">Get 1</span>
+            </div>
+            <button class="btn-promo">
+              <span>Order Now</span>
+              <span class="arrow">→</span>
+            </button>
+          </div>
+          <div class="promo-image">
+            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80"
+              alt="Pizza">
+          </div>
+          <div class="promo-glow"></div>
+        </div>
+
+        <!-- Card 4: Burger Blast -->
+        <div class="promo-card card-red" data-aos="fade-up" data-aos-delay="100">
+          <div class="promo-content">
+            <div class="promo-icon">🍔</div>
+            <span class="promo-tag">MEGA SAVINGS</span>
+            <h3 class="promo-heading">Burger Blast<br>Combo</h3>
+            <div class="promo-badge-price">
+              <span class="badge-text">Flat</span>
+              <span class="badge-price">₹499</span>
+            </div>
+            <button class="btn-promo">
+              <span>Order Now</span>
+              <span class="arrow">→</span>
+            </button>
+          </div>
+          <div class="promo-image">
+            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80"
+              alt="Burger">
+          </div>
+          <div class="promo-glow"></div>
+        </div>
+
+        <!-- Card 5: Healthy Bowl -->
+        <div class="promo-card card-green" data-aos="fade-up" data-aos-delay="200">
+          <div class="promo-content">
+            <div class="promo-icon">🥗</div>
+            <span class="promo-tag">HEALTHY CHOICE</span>
+            <h3 class="promo-heading">Fresh Salad<br>Bowls</h3>
+            <div class="promo-badge-price">
+              <span class="badge-text">30%</span>
+              <span class="badge-price">OFF</span>
+            </div>
+            <button class="btn-promo">
+              <span>Order Now</span>
+              <span class="arrow">→</span>
+            </button>
+          </div>
+          <div class="promo-image">
+            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80"
+              alt="Salad">
+          </div>
+          <div class="promo-glow"></div>
+        </div>
+
+        <!-- Card 6: Sushi Special -->
+        <div class="promo-card card-blue" data-aos="fade-up" data-aos-delay="300">
+          <div class="promo-content">
+            <div class="promo-icon">🍣</div>
+            <span class="promo-tag">PREMIUM OFFER</span>
+            <h3 class="promo-heading">Sushi Platter<br>Special</h3>
+            <div class="promo-badge-price">
+              <span class="badge-text">Only</span>
+              <span class="badge-price">₹1299</span>
+            </div>
+            <button class="btn-promo">
+              <span>Order Now</span>
+              <span class="arrow">→</span>
+            </button>
+          </div>
+          <div class="promo-image">
+            <img src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=600&q=80"
+              alt="Sushi">
+          </div>
+          <div class="promo-glow"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="logo">Speak2Eat</div>
+        <p>Experience the future of food delivery. Premium taste, right at your doorstep.</p>
+        <div class="social-links">
+          <a href="#" class="social-icon">IG</a>
+          <a href="#" class="social-icon">TW</a>
+          <a href="#" class="social-icon">FB</a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <div class="link-column">
+          <h4>Company</h4>
+          <a href="#">About Us</a>
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+        </div>
+        <div class="link-column">
+          <h4>Support</h4>
+          <a href="#">Help Center</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Privacy Policy</a>
+        </div>
+        <div class="link-column newsletter">
+          <h4>Stay Updated</h4>
+          <p>Join our newsletter for exclusive offers.</p>
+          <div class="input-group">
+            <input type="email" placeholder="Your email">
+            <button>→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Speak2Eat. All rights reserved.</p>
+    </div>
+  </footer>
+</div>

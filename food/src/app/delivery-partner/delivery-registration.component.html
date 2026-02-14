@@ -1,0 +1,290 @@
+<div class="registration-container">
+  <!-- Header -->
+  <div class="registration-header">
+    <h1>🚚 Delivery Partner Registration</h1>
+    <p>Join our delivery network and start earning</p>
+  </div>
+
+  <div class="registration-content">
+    <!-- Progress Bar -->
+    <div class="progress-section">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="getStepProgress()"></div>
+      </div>
+      <div class="step-counter">
+        Step {{ currentStep }} of {{ totalSteps }}
+      </div>
+    </div>
+
+    <!-- Registration Form -->
+    <form class="registration-form" (ngSubmit)="submitRegistration()">
+      
+      <!-- STEP 1: Basic Information -->
+      <div *ngIf="currentStep === 1" class="form-step">
+        <h2>📝 Basic Information</h2>
+        
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            [(ngModel)]="formData.name" 
+            name="name"
+            placeholder="Enter your full name"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input 
+            type="tel" 
+            class="form-control" 
+            [(ngModel)]="formData.phone" 
+            name="phone"
+            placeholder="10 digit mobile number"
+            maxlength="10"
+            required>
+          <small class="help-text">{{ formData.phone.length }}/10 digits</small>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input 
+            type="email" 
+            class="form-control" 
+            [(ngModel)]="formData.email" 
+            name="email"
+            placeholder="your@email.com"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Password *</label>
+          <input 
+            type="password" 
+            class="form-control" 
+            [(ngModel)]="formData.password" 
+            name="password"
+            placeholder="Minimum 6 characters"
+            (change)="onPasswordChange()"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Confirm Password *</label>
+          <input 
+            type="password" 
+            class="form-control" 
+            [class.error]="!passwordsMatch && formData.confirmPassword.length > 0"
+            [(ngModel)]="formData.confirmPassword" 
+            name="confirmPassword"
+            placeholder="Re-enter password"
+            (change)="onPasswordChange()"
+            required>
+          <small *ngIf="!passwordsMatch && formData.confirmPassword.length > 0" class="error-text">
+            ⚠️ Passwords don't match
+          </small>
+        </div>
+      </div>
+
+      <!-- STEP 2: Vehicle Information -->
+      <div *ngIf="currentStep === 2" class="form-step">
+        <h2>🚗 Vehicle Information</h2>
+        
+        <div class="form-group">
+          <label>Vehicle Type *</label>
+          <select class="form-control" [(ngModel)]="formData.vehicleType" name="vehicleType" required>
+            <option value="bicycle">🚴 Bicycle</option>
+            <option value="bike">🏍️ Bike/Scooter</option>
+            <option value="car">🚗 Car</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Vehicle Number *</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            [(ngModel)]="formData.vehicleNumber" 
+            name="vehicleNumber"
+            placeholder="e.g., DL01AB1234"
+            required>
+          <small class="help-text">Format: XX01AB1234</small>
+        </div>
+
+        <div class="form-group">
+          <label>Driving License Number *</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            [(ngModel)]="formData.licenseNumber" 
+            name="licenseNumber"
+            placeholder="Enter license number"
+            required>
+          <small class="help-text">Your driving license number</small>
+        </div>
+
+        <div class="vehicle-info-box">
+          <p>📌 Vehicle requirements:</p>
+          <ul>
+            <li>Valid registration certificate</li>
+            <li>Current insurance coverage</li>
+            <li>Valid driving license</li>
+            <li>Vehicle must be roadworthy</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 3: Documents -->
+      <div *ngIf="currentStep === 3" class="form-step">
+        <h2>📄 Document Verification</h2>
+        
+        <div class="form-group">
+          <label>Aadhar Number *</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            [(ngModel)]="formData.aadharNumber" 
+            name="aadharNumber"
+            placeholder="12 digit Aadhar number"
+            maxlength="12"
+            required>
+          <small class="help-text">{{ formData.aadharNumber.length }}/12 digits</small>
+        </div>
+
+        <div class="document-info-box">
+          <h4>📋 Required Documents:</h4>
+          <div class="document-list">
+            <div class="doc-item">
+              <span class="status">✓</span>
+              <span>Aadhar Card</span>
+            </div>
+            <div class="doc-item">
+              <span class="status">✓</span>
+              <span>Driving License</span>
+            </div>
+            <div class="doc-item">
+              <span class="status">✓</span>
+              <span>Vehicle Registration</span>
+            </div>
+            <div class="doc-item">
+              <span class="status">✓</span>
+              <span>Passport-sized Photo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <p>💡 Your documents will be verified within 24 hours. You can start accepting orders after verification.</p>
+        </div>
+      </div>
+
+      <!-- STEP 4: Bank Details -->
+      <div *ngIf="currentStep === 4" class="form-step">
+        <h2>🏦 Bank Account Details</h2>
+        
+        <div class="form-group">
+          <label>Account Holder Name *</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            [(ngModel)]="formData.bankHolderName" 
+            name="bankHolderName"
+            placeholder="Name as per bank account"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Account Number *</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            [(ngModel)]="formData.bankAccountNumber" 
+            name="bankAccountNumber"
+            placeholder="Enter 12-16 digit account number"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>IFSC Code *</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            [(ngModel)]="formData.bankIfsc" 
+            name="bankIfsc"
+            placeholder="e.g., SBIN0001234"
+            required>
+          <small class="help-text">11 character bank code</small>
+        </div>
+
+        <div class="bank-info-box">
+          <h4>💰 Earnings & Payments:</h4>
+          <ul>
+            <li>Earn ₹40 per delivery + customer tips</li>
+            <li>Bonus: ₹10 per delivery after 20 deliveries/day</li>
+            <li>Weekly payouts to your bank account</li>
+            <li>Zero payment gateway charges</li>
+          </ul>
+        </div>
+
+        <div class="security-box">
+          <p>🔒 Your bank details are encrypted and secure. We use industry-standard encryption for all transactions.</p>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="previousStep()"
+          [disabled]="currentStep === 1">
+          ← Previous
+        </button>
+
+        <button 
+          *ngIf="currentStep < totalSteps"
+          type="button" 
+          class="btn btn-primary" 
+          (click)="nextStep()">
+          Next →
+        </button>
+
+        <button 
+          *ngIf="currentStep === totalSteps"
+          type="submit" 
+          class="btn btn-success" 
+          [disabled]="loading">
+          {{ loading ? '⏳ Registering...' : '✓ Complete Registration' }}
+        </button>
+      </div>
+
+      <!-- Terms & Conditions -->
+      <div class="terms-box">
+        <p>
+          By registering, you agree to our 
+          <a href="#terms" target="_blank">Terms of Service</a> and 
+          <a href="#privacy" target="_blank">Privacy Policy</a>
+        </p>
+      </div>
+    </form>
+
+    <!-- Login Link -->
+    <div class="login-link">
+      <p>Already a delivery partner? <a routerLink="/delivery-login">Login here</a></p>
+    </div>
+  </div>
+
+  <!-- Alert Modal -->
+  <div *ngIf="modal.isOpen" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" [class]="modal.type" (click)="$event.stopPropagation()">
+      <div class="modal-body">
+        <h3>{{ modal.title }}</h3>
+        <p>{{ modal.message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="closeModal()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

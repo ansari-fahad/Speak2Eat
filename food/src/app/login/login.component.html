@@ -1,0 +1,165 @@
+<div class="login-container">
+    <style>
+        .error small {
+            color: red;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 4px;
+        }
+    </style>
+    <!-- Left: Infinite Food Gallery -->
+    <div class="visual-side">
+        <div class="infinite-scroll-wrapper">
+            <!-- Column 1: Slow Up -->
+            <div class="scroll-col col-1">
+                <div class="food-item"
+                    style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800')">
+                </div>
+                <div class="food-item"
+                    style="background-image: url('https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=800')">
+                </div>
+                <div class="food-item"
+                    style="background-image: url('https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=800')">
+                </div>
+                <!-- Duplicates for Loop -->
+                <div class="food-item"
+                    style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800')">
+                </div>
+            </div>
+            <!-- Column 2: Slow Down -->
+            <div class="scroll-col col-2">
+                <div class="food-item"
+                    style="background-image: url('https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800')">
+                </div>
+                <div class="food-item"
+                    style="background-image: url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?q=80&w=800')">
+                </div>
+                <div class="food-item"
+                    style="background-image: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800')">
+                </div>
+                <!-- Duplicates for Loop -->
+                <div class="food-item"
+                    style="background-image: url('https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800')">
+                </div>
+            </div>
+        </div>
+
+        <div class="visual-overlay">
+            <div class="glass-badge">
+                <span class="live-dot"></span>
+                <span>Live Orders: <strong>14.2k+</strong></span>
+            </div>
+            <div class="hero-text">
+                <h1>Taste the <br><em>Unimagined.</em></h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Auth Interaction -->
+    <div class="auth-side">
+        <div class="auth-card">
+
+            <div class="logo-row">
+                <div class="logo-mark">🍲</div>
+                <span>speak2eat</span>
+
+            </div>
+
+            <div class="header-text">
+                <h2>Welcome Back</h2>
+                <p>Hungry? You're in the right place.</p>
+            </div>
+
+            <!-- Segmented Control -->
+            <div class="segmented-control">
+                <input type="radio" name="role" id="customer" checked (change)="toggleUserType()">
+                <label for="customer">Customer</label>
+
+                <input type="radio" name="role" id="vendor" (change)="toggleUserType()">
+                <label for="vendor">Partner</label>
+
+                <div class="segment-indicator"></div>
+            </div>
+
+            <!-- Animated Inputs -->
+            <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
+
+                <!-- Email Field -->
+                <div class="anim-input-group">
+                    <input type="email" formControlName="email" required id="email" autocomplete="off">
+                    <label for="email">Email Address</label>
+                    <div class="highlight-bar"></div>
+                    <div class="icon-slot">✉️</div>
+
+                    <!-- Validation Errors -->
+                    <div class="error" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+                        <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</small>
+                        <small *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email.</small>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="anim-input-group">
+                    <input type="password" formControlName="password" required id="password">
+                    <label for="password">Password</label>
+                    <div class="highlight-bar"></div>
+                    <div class="icon-slot">🔒</div>
+
+                    <!-- Validation Errors -->
+                    <div class="error" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+                        <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</small>
+                    </div>
+                </div>
+
+                <div class="form-extras" style="justify-content: flex-end; margin-bottom: 20px;">
+                    <a routerLink="/forgot-password" class="forgot-btn" style="font-size: 0.9rem;">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="hero-btn">Sign In</button>
+            </form>
+
+
+            <div class="divider">
+                <span>or continue with</span>
+            </div>
+
+            <!-- Socials Fixed -->
+            <div class="social-row">
+                <button class="social-circle google" title="Google">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M23.5 12.28c0-.86-.07-1.7-.22-2.5H12v4.8h6.46c-.28 1.5-.7 2.76-1.5 3.82l-.02.15 3.56 2.76.25.02c2.18-2 3.45-5 3.45-8.55z"
+                            fill="#4285F4" />
+                        <path
+                            d="M12 24c3.24 0 5.96-1.08 7.95-2.9l-3.8-2.92c-1 .7-2.34 1.15-4.15 1.15-3.17 0-5.85-2.14-6.8-5h-3.7l-.12.09-3.76 2.9L1.4 17.4c1.94 3.86 5.92 6.6 10.6 6.6z"
+                            fill="#34A853" />
+                        <path
+                            d="M5.2 14.33c-.24-.72-.38-1.5-.38-2.33 0-.83.14-1.6.38-2.32H1.4l-.1.06C.5 11.23 0 12.8 0 14.48c0 1.6.48 3.1 1.28 4.4l3.92-3.05z"
+                            fill="#FBBC05" />
+                        <path
+                            d="M12 4.77c1.76 0 3.34.6 4.6 1.77l3.43-3.44C17.96 1.18 15.24 0 12 0 7.3 0 3.34 2.73 1.4 6.6l3.8 2.92c.96-2.86 3.64-5 6.8-5z"
+                            fill="#EA4335" />
+                    </svg>
+                </button>
+                <button class="social-circle apple" title="Apple">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#000">
+                        <path
+                            d="M17.05 19.5c-.8.8-1.55.8-2.75.25-1.25-.5-2.2-.4-3.15.25-1.3.9-2.6.25-3.3-1C4.8 14.5 5.5 8.9 10.3 8.7c1.45-.1 2.3.85 2.8.85s2-.9 3.05-.85c1.2.05 2.15.55 2.75 1.45-2.45 1.45-2.05 4.3.45 5.4.05.15-.35 1.45-.9 2.25-.5.75-1.05 1.75-1.4 1.7zM14.6 6.55c.65-.85.95-2.05.8-3.15-1.1.05-2.2.65-2.75 1.45-.55.75-.9 1.95-.7 3.05 1.15.1 2.05-.5 2.65-1.35z" />
+                    </svg>
+                </button>
+                <button class="social-circle facebook" title="Facebook">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="#1877F2">
+                        <path
+                            d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07z" />
+                    </svg>
+                </button>
+            </div>
+
+            <p class="signup-footer">
+                Don't have an account? <a routerLink="/signup">Join the feast</a>
+            </p>
+
+        </div>
+    </div>
+
+</div>

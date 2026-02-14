@@ -1,0 +1,204 @@
+<div class="vendor-history-container">
+  <!-- Header -->
+  <div class="history-header">
+    <h1>📊 History Dashboard</h1>
+    <p class="subtitle">View your complete order and transaction history</p>
+  </div>
+
+  <!-- Tab Toggle -->
+  <div class="tab-toggle">
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'orders'"
+      (click)="setActiveTab('orders')">
+      📦 Orders
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'transactions'"
+      (click)="setActiveTab('transactions')">
+      💳 Transactions
+    </button>
+  </div>
+
+  <!-- ======================== ORDERS SECTION ======================== -->
+  <div class="history-section" *ngIf="activeTab === 'orders'">
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="card">
+        <div class="card-value">{{ totalOrders }}</div>
+        <div class="card-label">Total Orders</div>
+      </div>
+      <div class="card">
+        <div class="card-value">₹{{ totalOrderAmount.toFixed(2) }}</div>
+        <div class="card-label">Total Revenue</div>
+      </div>
+    </div>
+
+    <!-- Filters & Search -->
+    <div class="filters-section">
+      <div class="search-box">
+        <input 
+          type="text" 
+          placeholder="Search by Order ID, Customer, or Address..." 
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+          class="search-input">
+      </div>
+      <div class="filter-group">
+        <select 
+          [(ngModel)]="orderStatusFilter"
+          (change)="onStatusFilterChange()"
+          class="filter-select">
+          <option value="all">All Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="Preparing">Preparing</option>
+          <option value="Ready for Pickup">Ready</option>
+          <option value="Out for Delivery">Out for Delivery</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+        <button (click)="exportToCSV()" class="export-btn">📥 Export CSV</button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="orderLoading" class="loading">
+      <p>Loading order history...</p>
+    </div>
+
+    <!-- Orders Table -->
+    <div *ngIf="!orderLoading && paginatedOrders.length > 0" class="table-container">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of paginatedOrders">
+            <td class="order-id">{{ order._id.slice(0, 8) }}...</td>
+            <td>{{ formatDate(order.orderDate) }}</td>
+            <td>{{ order.customerName || '-' }}</td>
+            <td class="amount">₹{{ order.total }}</td>
+            <td>
+              <span class="badge" [class]="getStatusBadgeClass(order.status)">
+                {{ order.status }}
+              </span>
+            </td>
+            <td class="address">{{ order.deliveryAddress || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!orderLoading && paginatedOrders.length === 0" class="empty-state">
+      <p>📭 No orders found</p>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button (click)="previousPage()" [disabled]="currentPage === 1" class="pagination-btn">Previous</button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="pagination-btn">Next</button>
+    </div>
+  </div>
+
+  <!-- ======================== TRANSACTIONS SECTION ======================== -->
+  <div class="history-section" *ngIf="activeTab === 'transactions'">
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="card">
+        <div class="card-value">{{ totalTransactions }}</div>
+        <div class="card-label">Total Withdrawals</div>
+      </div>
+      <div class="card">
+        <div class="card-value">₹{{ totalWithdrawn.toFixed(2) }}</div>
+        <div class="card-label">Total Withdrawn</div>
+      </div>
+      <div class="card">
+        <div class="card-value">₹{{ totalPending.toFixed(2) }}</div>
+        <div class="card-label">Pending</div>
+      </div>
+    </div>
+
+    <!-- Filters & Search -->
+    <div class="filters-section">
+      <div class="search-box">
+        <input 
+          type="text" 
+          placeholder="Search by Transaction ID or Account Holder..." 
+          [(ngModel)]="searchText"
+          (input)="onSearch()"
+          class="search-input">
+      </div>
+      <div class="filter-group">
+        <select 
+          [(ngModel)]="transactionStatusFilter"
+          (change)="onStatusFilterChange()"
+          class="filter-select">
+          <option value="all">All Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Completed">Completed</option>
+          <option value="Failed">Failed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+        <button (click)="exportToCSV()" class="export-btn">📥 Export CSV</button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="transactionLoading" class="loading">
+      <p>Loading transaction history...</p>
+    </div>
+
+    <!-- Transactions Table -->
+    <div *ngIf="!transactionLoading && paginatedTransactions.length > 0" class="table-container">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Requested Date</th>
+            <th>Processed Date</th>
+            <th>Account Holder</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let transaction of paginatedTransactions">
+            <td class="transaction-id">{{ transaction._id.slice(0, 8) }}...</td>
+            <td class="amount">₹{{ transaction.amount }}</td>
+            <td>
+              <span class="badge" [class]="getStatusBadgeClass(transaction.status)">
+                {{ transaction.status }}
+              </span>
+            </td>
+            <td>{{ formatDate(transaction.requestedAt) }}</td>
+            <td>{{ formatDate(transaction.processedAt) }}</td>
+            <td>{{ transaction.bankAccount?.accountHolder || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!transactionLoading && paginatedTransactions.length === 0" class="empty-state">
+      <p>💼 No transactions found</p>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="pagination">
+      <button (click)="previousPage()" [disabled]="currentPage === 1" class="pagination-btn">Previous</button>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="pagination-btn">Next</button>
+    </div>
+  </div>
+</div>

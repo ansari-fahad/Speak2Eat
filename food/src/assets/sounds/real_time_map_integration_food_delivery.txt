@@ -1,0 +1,115 @@
+3. Order Assignment Logic (VERY IMPORTANT):-
+
+When an order is placed:
+
+Order goes to Vendor
+
+Vendor accepts the order
+
+Vendor Mark order as ready(delivered)
+
+System finds nearest available delivery partner
+
+Order is assigned to delivery partner
+
+Partner accepts or rejects
+------------------------------------------------------------
+REAL-TIME MAP INTEGRATION FOR FOOD DELIVERY SYSTEM (MEAN STACK)
+
+PROBLEM:
+Need real-time order tracking for User, Vendor, and Delivery Partner (Rider).
+
+SOLUTION OVERVIEW:
+Use a combination of:
+- Google Maps API (map display)
+- Geolocation API (live GPS tracking)
+- Socket.IO (real-time communication)
+- Node.js + Express (backend)
+- MongoDB (database)
+
+--------------------------------------------------
+1. MAP INTEGRATION (ANGULAR)
+--------------------------------------------------
+- Use Google Maps JavaScript API
+- Install: @angular/google-maps
+- Display rider marker on map
+- Update marker position dynamically
+
+--------------------------------------------------
+2. RIDER LIVE LOCATION TRACKING
+--------------------------------------------------
+- Use browser/mobile Geolocation API
+- navigator.geolocation.watchPosition()
+- Continuously capture latitude & longitude
+- Send location to server
+
+--------------------------------------------------
+3. REAL-TIME COMMUNICATION (SOCKET.IO)
+--------------------------------------------------
+- Rider emits location updates
+- Server broadcasts updates
+- User & Vendor receive live updates
+- Use orderId as Socket room
+
+FLOW:
+Rider → Socket.IO → Server → User/Vendor Map
+
+--------------------------------------------------
+4. ORDER STATUS + MAP SYNC
+--------------------------------------------------
+Order Status Flow:
+PLACED
+→ ACCEPTED_BY_VENDOR
+→ ASSIGNED_TO_DELIVERY
+→ PICKED_UP
+→ OUT_FOR_DELIVERY
+→ DELIVERED
+
+Each status update is emitted via Socket.IO
+Maps update along with status
+
+--------------------------------------------------
+5. PERFORMANCE OPTIMIZATION
+--------------------------------------------------
+- Send location every 3–5 seconds
+- Avoid sending updates too frequently
+- Stop tracking after delivery
+
+--------------------------------------------------
+6. SECURITY MEASURES
+--------------------------------------------------
+- Only assigned user/vendor can view tracking
+- Validate orderId before joining socket room
+- JWT-based authentication
+- Role-based access
+
+--------------------------------------------------
+7. SIMPLER COLLEGE PROJECT ALTERNATIVE
+--------------------------------------------------
+- Use REST API instead of sockets
+- Update location every 10–15 seconds
+- Acceptable for academic projects
+
+--------------------------------------------------
+8. REAL-WORLD APPROACH (SWIGGY/ZOMATO)
+--------------------------------------------------
+- Google Maps / Mapbox
+- Mobile GPS
+- WebSockets
+- Message queues (Kafka/Redis) for scale
+
+--------------------------------------------------
+FINAL ARCHITECTURE:
+--------------------------------------------------
+Rider GPS
+   ↓
+Socket.IO
+   ↓
+Node.js Server
+   ↓
+User & Vendor Google Maps UI
+
+--------------------------------------------------
+INTERVIEW ONE-LINER:
+--------------------------------------------------
+"We use Google Maps API for visualization, Geolocation API for live tracking, and Socket.IO for real-time updates between rider, vendor, and user."

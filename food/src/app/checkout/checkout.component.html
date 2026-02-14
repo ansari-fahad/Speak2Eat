@@ -1,0 +1,105 @@
+<div class="checkout-container">
+    <div class="checkout-layout">
+        <!-- Left Side: Form -->
+        <div class="form-section">
+            <h2 class="section-title">Delivery Details</h2>
+            <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" formControlName="fullName" placeholder="John Doe">
+                    <div class="error"
+                        *ngIf="checkoutForm.get('fullName')?.touched && checkoutForm.get('fullName')?.invalid">
+                        Name is required
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea formControlName="address" rows="3" placeholder="123 Food Street, Apt 4B"></textarea>
+                    <div class="error"
+                        *ngIf="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid">
+                        Address is required
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group half">
+                        <label>City</label>
+                        <input type="text" formControlName="city" placeholder="Ahmedabad">
+                    </div>
+                    <div class="form-group half">
+                        <label>Zip Code</label>
+                        <input type="text" formControlName="zip" placeholder="380009">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" formControlName="phone" placeholder="9876543210">
+                    <div class="error" *ngIf="checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.invalid">
+                        Valid 10-digit phone is required
+                    </div>
+                </div>
+
+                <h2 class="section-title mt-4">Payment Method</h2>
+                <div class="payment-options">
+                    <label class="payment-card">
+                        <input type="radio" formControlName="paymentType" value="COD">
+                        <div class="card-content">
+                            <span class="icon">💵</span>
+                            <span>Cash on Delivery</span>
+                        </div>
+                    </label>
+                    <label class="payment-card">
+                        <input type="radio" formControlName="paymentType" value="Online">
+                        <div class="card-content">
+                            <span class="icon">💳</span>
+                            <span>Online Payment (UPI/Card)</span>
+                        </div>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-place-order">Place Order</button>
+            </form>
+        </div>
+
+        <!-- Right Side: Order Summary -->
+        <div class="summary-section">
+            <div class="summary-card">
+                <h3>Order Summary</h3>
+                <div class="summary-items">
+                    <div class="s-item" *ngFor="let item of cart?.products">
+                        <div class="item-info">
+                            <span class="qty">{{ item.quantity }}x</span>
+                            <span class="name">{{ item.productId.name }}</span>
+                        </div>
+                        <span class="price">{{ (item.productId.price * item.quantity) | currency:'INR' }}</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="totals-row">
+                    <span>Subtotal</span>
+                    <span>{{ totalPrice | currency:'INR' }}</span>
+                </div>
+                <div class="totals-row">
+                    <span>Delivery Charge</span>
+                    <span>₹40.00</span>
+                </div>
+                <div class="totals-row">
+                    <span>Platform Fee</span>
+                    <span>₹4.00</span>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="grand-total">
+                    <span>Total Amount</span>
+                    <span>{{ (totalPrice + 40 + 4) | currency:'INR' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

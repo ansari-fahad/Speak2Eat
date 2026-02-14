@@ -1,0 +1,564 @@
+<div class="delivery-partner-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>🚚 Delivery Partner Dashboard</h1>
+      <div class="header-actions">
+        <!-- Voice Navigation Button -->
+        <app-voice-button></app-voice-button>
+        <button class="btn btn-info" (click)="viewProfile()">
+          👤 View Profile
+        </button>
+        <button class="btn btn-status" [class.online]="isOnline" (click)="toggleOnlineStatus()" [disabled]="loading">
+          {{ isOnline ? '🟢 ONLINE' : '🔴 OFFLINE' }}
+        </button>
+        <button class="btn btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <button class="nav-btn" [class.active]="activeTab === 'dashboard'" (click)="setActiveTab('dashboard')">
+        📍 Dashboard
+      </button>
+      <button class="nav-btn" [class.active]="activeTab === 'orders'" (click)="setActiveTab('orders')">
+        📦 Orders
+      </button>
+      <button class="nav-btn" [class.active]="activeTab === 'earnings'" (click)="setActiveTab('earnings')">
+        💰 Earnings
+      </button>
+      <button *ngIf="profileComplete" class="nav-btn" [class.active]="activeTab === 'profile'"
+        (click)="setActiveTab('profile')">
+        👤 Profile
+      </button>
+      <button *ngIf="!profileComplete" class="nav-btn complete-profile-btn"
+        [class.active]="activeTab === 'complete-profile'" (click)="setActiveTab('complete-profile')">
+        ⚙️ Complete Profile
+      </button>
+    </nav>
+    <!-- Content Area -->
+    <div class="content">
+      <!-- DASHBOARD TAB -->
+      <section *ngIf="activeTab === 'dashboard'" class="tab-content dashboard-tab">
+        <div class="map-section">
+          <div #mapContainer class="map-container">
+            <iframe width="100%" height="100%" frameborder="0" style="border:0"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps/embed/v1/place?key=AIzaSyB6-9LAZic-1KcknDuvtmJdCuzXiLrLs2s&q=LJ Institutes Of Computer Applications,Ahmedabad,Gujarat"
+              allowfullscreen>
+            </iframe>
+            <!-- <iframe width="100%" height="100%" frameborder="0" style="border:0"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps/embed/v1/place?key=AIzaSyB6-9LAZic-1KcknDuvtmJdCuzXiLrLs2s&q=Bapunagar,Ahmedabad,Gujarat"
+              allowfullscreen>
+            </iframe> -->
+          </div>
+        </div>
+
+        <div class="status-panel">
+          <div class="status-item">
+            <span class="label">📍 Current Location</span>
+            <span class="value">{{ currentLocation.latitude.toFixed(4) }}, {{ currentLocation.longitude.toFixed(4)
+              }}</span>
+          </div>
+          <div class="status-item">
+            <span class="label">🟢 Online Status</span>
+            <span class="value">{{ isOnline ? 'Online' : 'Offline' }}</span>
+          </div>
+          <div class="status-item">
+            <span class="label">📦 Current Order</span>
+            <span class="value">{{ pendingOrder ? 'Active' : 'None' }}</span>
+          </div>
+        </div>
+
+        <!-- Current Order Card - Enhanced -->
+        <div *ngIf="pendingOrder && orderClaimed && isOnline" class="order-card enhanced-order-card">
+          <h3>📦 Current Order</h3>
+          <div class="order-info">
+            <div class="info-row">
+              <span class="label">Order ID:</span>
+              <span class="value">{{ pendingOrder._id.slice(0, 8) }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Customer:</span>
+              <span class="value">{{ pendingOrder.customerName }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Location:</span>
+              <span class="value" *ngIf="!orderPickedUp">{{ pendingOrder.vendorAddress }}</span>
+              <span class="value" *ngIf="orderPickedUp">{{ pendingOrder.deliveryAddress }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Items:</span>
+              <span class="value">{{ pendingOrder.items?.length || 0 }} items</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Amount:</span>
+              <span class="value">₹{{ pendingOrder.total }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Status:</span>
+              <span class="value status-badge" [ngClass]="pendingOrder.status?.toLowerCase()">{{ pendingOrder.status
+                }}</span>
+            </div>
+          </div>
+
+          <div class="order-actions">
+            <!-- Before pickup -->
+            <button class="btn btn-warning" (click)="openVendorMap()"
+              *ngIf="!orderPickedUp && pendingOrder.status !== 'DELIVERED'">
+              🗺️ Go to Vendor
+            </button>
+            <button class="btn btn-success" (click)="markOrderPickedUp()"
+              *ngIf="!orderPickedUp && pendingOrder.status !== 'DELIVERED'">
+              📦 Order Picked
+            </button>
+
+            <!-- After pickup -->
+            <button class="btn btn-warning" (click)="openCustomerMap()"
+              *ngIf="orderPickedUp && pendingOrder.status !== 'DELIVERED'">
+              🗺️ Go to Customer
+            </button>
+            <button class="btn btn-success" (click)="deliverOrder()"
+              *ngIf="orderPickedUp && pendingOrder.status !== 'DELIVERED'">
+              ✓ Deliver Order
+            </button>
+
+            <button class="btn btn-info" (click)="viewOrderDetails()">
+              📋 View Details
+            </button>
+          </div>
+        </div>
+
+        <!-- Available Orders Button and List -->
+        <div *ngIf="isOnline && !orderClaimed" class="section-header available-orders-dashboard">
+          <button class="btn btn-primary btn-large" (click)="loadAvailableOrders()" [disabled]="loading">
+            🍽️ View Available Orders
+          </button>
+        </div>
+
+        <!-- Available Orders List on Dashboard -->
+        <div *ngIf="showAvailableOrdersList && availableOrders.length > 0 && !orderClaimed"
+          class="available-orders-dashboard-list">
+          <h3>Available Orders Ready for Pickup</h3>
+          <div class="orders-list">
+            <div *ngFor="let order of availableOrders" class="order-item available"
+              (click)="openOrderForClaiming(order)">
+              <div class="order-header">
+                <span class="order-id">Order #{{ order._id.slice(0, 8) }}</span>
+                <span class="order-status ready">Ready 🍽️</span>
+              </div>
+              <div class="order-details">
+                <p><strong>Customer:</strong> {{ order.userId?.name }}</p>
+                <p><strong>Delivery Address:</strong> {{ getAddressString(order.userId?.address) }}</p>
+                <p><strong>Vendor:</strong> {{ order.products && order.products[0]?.vendorId?.shopName }}</p>
+                <p><strong>Amount:</strong> ₹{{ order.total }}</p>
+              </div>
+              <div class="order-hint">
+                <p>Click to view and claim order</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!pendingOrder && isOnline && !showAvailableOrdersList && !orderClaimed" class="no-order">
+          <div class="no-order-icon">📭</div>
+          <p>No active orders. Click "View Available Orders" to find delivery jobs!</p>
+        </div>
+      </section>
+
+      <!-- ORDERS TAB -->
+      <section *ngIf="activeTab === 'orders'" class="tab-content orders-tab">
+        <div class="orders-header">
+          <h2>📦 Order Management</h2>
+          <button class="btn btn-primary btn-large" (click)="loadAvailableOrders()" [disabled]="loading"
+            *ngIf="isOnline && !orderClaimed">
+            🍽️ View Available Orders
+          </button>
+        </div>
+
+        <!-- Current Delivery Section -->
+        <div *ngIf="pendingOrder && orderClaimed" class="current-delivery-section">
+          <h3>📦 Current Delivery</h3>
+          <div class="order-card current-order">
+            <div class="order-header">
+              <span class="order-id">Order #{{ pendingOrder._id.slice(0, 8) }}</span>
+              <span class="order-status" [ngClass]="pendingOrder.status?.toLowerCase()?.replace(' ', '-')">
+                {{ pendingOrder.status }}
+              </span>
+            </div>
+            <div class="order-details">
+              <p><strong>Customer:</strong> {{ pendingOrder.customerName }}</p>
+              <p *ngIf="pendingOrder.deliveryAddress"><strong>Deliver To:</strong> {{ pendingOrder.deliveryAddress }}
+              </p>
+              <p *ngIf="pendingOrder.customerPhone"><strong>Customer Phone:</strong> {{ pendingOrder.customerPhone }}
+              </p>
+              <p *ngIf="pendingOrder.vendorAddress"><strong>Pickup From:</strong> {{ pendingOrder.vendorAddress }}</p>
+              <p *ngIf="pendingOrder.vendorPhone"><strong>Vendor Phone:</strong> {{ pendingOrder.vendorPhone }}</p>
+              <p><strong>Items:</strong> {{ pendingOrder.items?.length || 0 }} items</p>
+              <p><strong>Total:</strong> ₹{{ pendingOrder.total }}</p>
+            </div>
+            <div class="order-actions">
+              <button class="btn btn-warning" (click)="openVendorMap()" *ngIf="!orderPickedUp">
+                🗺️ Go to Vendor
+              </button>
+              <button class="btn btn-success" (click)="markOrderPickedUp()" *ngIf="!orderPickedUp">
+                📦 Mark Picked Up
+              </button>
+              <button class="btn btn-warning" (click)="updateMapToVendorLocation()"
+                *ngIf="orderClaimed && !orderPickedUp">
+                🗺️ Go to Vendor
+              </button>
+              <button class="btn btn-warning" (click)="openVendorMap()" *ngIf="orderPickedUp">
+                🗺️ Go to Customer
+              </button>
+              <button class="btn btn-success" (click)="deliverOrder()" *ngIf="orderPickedUp">
+                ✓ Deliver Order
+              </button>
+              <button class="btn btn-info" (click)="viewOrderDetails()">
+                📋 View Details
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Available Orders List -->
+        <div *ngIf="showAvailableOrdersList && availableOrders.length > 0 && !orderClaimed"
+          class="available-orders-section">
+          <h3>🍽️ Available Orders Ready for Pickup</h3>
+          <div class="orders-list">
+            <div *ngFor="let order of availableOrders" class="order-item available"
+              (click)="openOrderForClaiming(order)">
+              <div class="order-header">
+                <span class="order-id">Order #{{ order._id.slice(0, 8) }}</span>
+                <span class="order-status ready">Ready 🍽️</span>
+              </div>
+              <div class="order-details">
+                <p><strong>Customer:</strong> {{ order.userId?.name || 'Unknown' }}</p>
+                <p><strong>Delivery Address:</strong> {{ getAddressString(order.userId?.address) }}</p>
+                <p><strong>Vendor:</strong> {{ order.products && order.products[0]?.vendorId?.shopName }}</p>
+                <p><strong>Amount:</strong> ₹{{ order.total }}</p>
+              </div>
+              <div class="order-hint">
+                <p>Click to view and claim order</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order History -->
+        <div class="order-history-section">
+          <h3>📋 Order History</h3>
+          <div class="orders-list">
+            <div *ngIf="orderHistory.length === 0" class="empty-state">
+              <p>No completed orders yet</p>
+            </div>
+            <div *ngFor="let order of orderHistory" class="order-item completed">
+              <div class="order-header">
+                <span class="order-id">Order #{{ order._id.slice(0, 8) }}</span>
+                <span class="order-status delivered">{{ order.status }}</span>
+              </div>
+              <div class="order-details">
+                <p><strong>Customer:</strong> {{ order.customerName }}</p>
+                <p><strong>Amount:</strong> ₹{{ order.total }}</p>
+                <p><strong>Items:</strong> {{ order.items?.length || 0 }} items</p>
+                <p><strong>Delivered:</strong> {{ order.deliveredAt | date:'short' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EARNINGS TAB -->
+      <section *ngIf="activeTab === 'earnings'" class="tab-content earnings-tab">
+        <h2>💰 Earnings Summary</h2>
+
+        <div class="earnings-cards">
+          <div class="earning-card primary">
+            <div class="card-header">Total Earnings</div>
+            <div class="card-value">₹{{ totalEarnings.toFixed(2) }}</div>
+            <div class="card-desc">Lifetime earnings</div>
+          </div>
+
+          <div class="earning-card">
+            <div class="card-header">Wallet Balance</div>
+            <div class="card-value">₹{{ walletBalance.toFixed(2) }}</div>
+            <div class="card-desc">Available for withdrawal</div>
+          </div>
+
+          <div class="earning-card">
+            <div class="card-header">Total Deliveries</div>
+            <div class="card-value">{{ totalDeliveries }}</div>
+            <div class="card-desc">Successfully delivered</div>
+          </div>
+
+          <div class="earning-card">
+            <div class="card-header">Average Rating</div>
+            <div class="card-value">⭐ {{ averageRating.toFixed(1) }}</div>
+            <div class="card-desc">Out of 5 stars</div>
+          </div>
+        </div>
+
+        <div class="earnings-info">
+          <h3>Earning Details</h3>
+          <table class="earnings-table">
+            <tr>
+              <td>Per Delivery:</td>
+              <td>₹40 + Tips</td>
+            </tr>
+            <tr>
+              <td>Active Deliveries (7 days):</td>
+              <td>{{ totalDeliveries }}</td>
+            </tr>
+            <tr>
+              <td>Bonus (if > 20 deliveries):</td>
+              <td>₹{{ totalDeliveries > 20 ? (totalDeliveries - 20) * 10 : 0 }}</td>
+            </tr>
+          </table>
+        </div>
+      </section>
+
+      <!-- PROFILE TAB -->
+      <section *ngIf="activeTab === 'profile'" class="tab-content profile-tab">
+        <h2>👤 Profile Settings</h2>
+
+        <div class="profile-form">
+          <div class="form-group">
+            <label>Vehicle Type</label>
+            <select class="form-control">
+              <option>Bicycle</option>
+              <option>Motorcycle</option>
+              <option>Car</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Vehicle Number</label>
+            <input type="text" class="form-control" placeholder="Enter vehicle number">
+          </div>
+
+          <div class="form-group">
+            <label>License Number</label>
+            <input type="text" class="form-control" placeholder="Enter license number">
+          </div>
+
+          <div class="form-group">
+            <label>Bank Account Number</label>
+            <input type="text" class="form-control" placeholder="****1234">
+          </div>
+
+          <div class="form-group">
+            <label>IFSC Code</label>
+            <input type="text" class="form-control" placeholder="SBIN0001234">
+          </div>
+
+          <button class="btn btn-primary">💾 Update Profile</button>
+        </div>
+      </section>
+
+      <!-- COMPLETE PROFILE TAB -->
+      <section *ngIf="activeTab === 'complete-profile'" class="tab-content complete-profile-tab">
+        <div class="profile-completion-card">
+          <h2>⚙️ Complete Your Profile</h2>
+          <p class="subtitle">Fill in your delivery details to start accepting orders</p>
+
+          <form class="profile-form" (ngSubmit)="saveDeliveryInformation()">
+            <div class="form-group">
+              <label for="vehicleType">Vehicle Type *</label>
+              <select id="vehicleType" [(ngModel)]="deliveryInfo.vehicleType" name="vehicleType" class="form-control"
+                required>
+                <option value="">Select Vehicle Type</option>
+                <option value="bike">🏍️ Bike</option>
+                <option value="scooter">🛵 Scooter</option>
+                <option value="car">🚗 Car</option>
+                <option value="bicycle">🚴 Bicycle</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="vehicleNumber">Vehicle Number *</label>
+              <input id="vehicleNumber" type="text" [(ngModel)]="deliveryInfo.vehicleNumber" name="vehicleNumber"
+                class="form-control" placeholder="e.g., DL-01-AB-1234" required>
+            </div>
+
+            <div class="form-group">
+              <label for="licenseNumber">License Number *</label>
+              <input id="licenseNumber" type="text" [(ngModel)]="deliveryInfo.licenseNumber" name="licenseNumber"
+                class="form-control" placeholder="e.g., DL0920200123456" required>
+            </div>
+
+            <div class="form-group">
+              <label for="aadharNumber">Aadhar Number * (12 digits)</label>
+              <input id="aadharNumber" type="text" [(ngModel)]="deliveryInfo.aadharNumber" name="aadharNumber"
+                class="form-control" placeholder="e.g., 123456789012" maxlength="12" required>
+              <small *ngIf="deliveryInfo.aadharNumber && deliveryInfo.aadharNumber.length !== 12"
+                class="text-danger">Aadhar must be exactly 12 digits</small>
+            </div>
+
+            <div class="form-group">
+              <label for="bankAccountNumber">Bank Account Number *</label>
+              <input id="bankAccountNumber" type="text" [(ngModel)]="deliveryInfo.bankAccountNumber"
+                name="bankAccountNumber" class="form-control" placeholder="Enter bank account number" required>
+            </div>
+
+            <div class="form-group">
+              <label for="bankIfsc">Bank IFSC Code * (11 characters)</label>
+              <input id="bankIfsc" type="text" [(ngModel)]="deliveryInfo.bankIfsc" name="bankIfsc" class="form-control"
+                placeholder="e.g., SBIN0001234" maxlength="11" required>
+              <small *ngIf="deliveryInfo.bankIfsc && deliveryInfo.bankIfsc.length !== 11" class="text-danger">IFSC must
+                be exactly 11 characters</small>
+            </div>
+
+            <div class="form-group">
+              <label for="bankHolderName">Bank Holder Name *</label>
+              <input id="bankHolderName" type="text" [(ngModel)]="deliveryInfo.bankHolderName" name="bankHolderName"
+                class="form-control" placeholder="Enter bank holder name" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-large">
+              ✓ Save & Complete Profile
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div *ngIf="showOrderDetails" class="modal-overlay" (click)="closeOrderDetails()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>📋 Order Details</h3>
+        <button class="close-btn" (click)="closeOrderDetails()">✕</button>
+      </div>
+
+      <div *ngIf="pendingOrder" class="modal-body">
+        <div class="detail-section">
+          <h4>Customer Information</h4>
+          <p><strong>Name:</strong> {{ pendingOrder.customerName }}</p>
+          <p><strong>Delivery Address:</strong> {{ pendingOrder.deliveryAddress }}</p>
+        </div>
+
+        <div class="detail-section">
+          <h4>Order Items</h4>
+          <table class="items-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of pendingOrder.items">
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>₹{{ item.price }}</td>
+                <td>₹{{ item.price * item.quantity }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="detail-section">
+          <h4>Order Summary</h4>
+          <p><strong>Subtotal:</strong> ₹{{ pendingOrder.total }}</p>
+          <p><strong>Status:</strong> {{ pendingOrder.status }}</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeOrderDetails()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Food Ready Alert Modal -->
+  <div *ngIf="foodReadyAlert.isOpen" class="modal-overlay food-ready-overlay" (click)="closeFoodReadyAlert()">
+    <div class="modal-content food-ready-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header success">
+        <h2>🍽️ Food is Ready!</h2>
+        <button class="close-btn" (click)="closeFoodReadyAlert()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div *ngIf="foodReadyAlert.order" class="food-ready-content">
+          <div class="alert-icon">🍽️</div>
+
+          <h3>Order Ready for Pickup</h3>
+
+          <div class="order-info-section">
+            <p><strong>Order ID:</strong> #{{ foodReadyAlert.order._id.slice(0, 8) }}</p>
+            <p><strong>Customer:</strong> {{ foodReadyAlert.order.customerName }}</p>
+            <p><strong>Items:</strong> {{ foodReadyAlert.order.items?.length || 0 }} items</p>
+            <p><strong>Amount:</strong> ₹{{ foodReadyAlert.order.total }}</p>
+          </div>
+
+          <div class="vendor-info">
+            <p><strong>Pickup From:</strong></p>
+            <p class="address">{{ foodReadyAlert.order.vendorAddress }}</p>
+            <p *ngIf="foodReadyAlert.order.vendorPhone" class="muted"><strong>Phone:</strong> {{
+              foodReadyAlert.order.vendorPhone }}</p>
+          </div>
+
+          <div class="delivery-info">
+            <p><strong>Deliver To:</strong></p>
+            <p class="address">{{ foodReadyAlert.order.deliveryAddress }}</p>
+            <p *ngIf="foodReadyAlert.order.customerPhone" class="muted"><strong>Phone:</strong> {{
+              foodReadyAlert.order.customerPhone }}</p>
+          </div>
+
+          <!-- Timer Display -->
+          <div class="claim-timer" [ngClass]="{'warning': claimTimeRemaining <= 10}">
+            <p>⏱️ Claim this order in:</p>
+            <div class="timer-display">{{ claimTimeString }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer claim-modal-footer">
+        <button class="btn btn-secondary" (click)="closeFoodReadyAlert()" [disabled]="loading">
+          ✕ Cancel
+        </button>
+        <button class="btn btn-secondary" (click)="openVendorMap(foodReadyAlert.order)"
+          [disabled]="loading || !foodReadyAlert.order?.vendorAddress">
+          🗺️ Go to Vendor
+        </button>
+        <button class="btn btn-primary btn-claim-modal" (click)="claimOrderForPickup()"
+          [disabled]="loading || claimTimeRemaining <= 0">
+          ✓ Claim Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert Modal -->
+  <div *ngIf="modal.isOpen" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content modal-alert" (click)="$event.stopPropagation()" [class.success]="modal.type === 'success'"
+      [class.error]="modal.type === 'error'" [class.warning]="modal.type === 'warning'"
+      [class.confirm]="modal.type === 'confirm'">
+
+      <div class="modal-header">
+        <h3>{{ modal.title }}</h3>
+      </div>
+
+      <div class="modal-body">
+        <p>{{ modal.message }}</p>
+      </div>
+
+      <div class="modal-footer">
+        <button *ngIf="modal.type === 'confirm'" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="modal.type === 'confirm' ? confirmModal() : closeModal()">
+          {{ modal.type === 'confirm' ? 'Confirm' : 'OK' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Processing...</p>
+  </div>
+</div>

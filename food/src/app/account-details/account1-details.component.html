@@ -1,0 +1,158 @@
+<div class="account-details-container">
+  <div class="account-header">
+    <h1>{{ userType === 'vendor' ? 'Vendor' : 'User' }} Account Details</h1>
+    <p class="subtitle">Manage your bank account information for payments and withdrawals</p>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading account details...</p>
+  </div>
+
+  <div *ngIf="!isLoading" class="account-form-wrapper">
+    <form [formGroup]="accountForm" (ngSubmit)="saveAccountDetails()" class="account-form">
+      
+      <!-- Bank Account Details Section -->
+      <div class="form-section">
+        <h2>Bank Account Information</h2>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="accountHolderName">Account Holder Name *</label>
+            <input 
+              type="text" 
+              id="accountHolderName" 
+              formControlName="accountHolderName"
+              placeholder="Enter account holder name"
+              [class.invalid]="accountForm.get('accountHolderName')?.invalid && accountForm.get('accountHolderName')?.touched">
+            <span class="error-message" *ngIf="accountForm.get('accountHolderName')?.invalid && accountForm.get('accountHolderName')?.touched">
+              Account holder name is required
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="accountNumber">Account Number *</label>
+            <input 
+              type="text" 
+              id="accountNumber" 
+              formControlName="accountNumber"
+              placeholder="Enter account number"
+              [class.invalid]="accountForm.get('accountNumber')?.invalid && accountForm.get('accountNumber')?.touched">
+            <span class="error-message" *ngIf="accountForm.get('accountNumber')?.invalid && accountForm.get('accountNumber')?.touched">
+              Valid account number (9-18 digits) is required
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="ifscCode">IFSC Code *</label>
+            <input 
+              type="text" 
+              id="ifscCode" 
+              formControlName="ifscCode"
+              placeholder="e.g., HDFC0001234"
+              [class.invalid]="accountForm.get('ifscCode')?.invalid && accountForm.get('ifscCode')?.touched">
+            <span class="error-message" *ngIf="accountForm.get('ifscCode')?.invalid && accountForm.get('ifscCode')?.touched">
+              Valid IFSC code is required (e.g., HDFC0001234)
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bankName">Bank Name *</label>
+            <input 
+              type="text" 
+              id="bankName" 
+              formControlName="bankName"
+              placeholder="Enter bank name"
+              [class.invalid]="accountForm.get('bankName')?.invalid && accountForm.get('bankName')?.touched">
+            <span class="error-message" *ngIf="accountForm.get('bankName')?.invalid && accountForm.get('bankName')?.touched">
+              Bank name is required
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="branchName">Branch Name *</label>
+            <input 
+              type="text" 
+              id="branchName" 
+              formControlName="branchName"
+              placeholder="Enter branch name"
+              [class.invalid]="accountForm.get('branchName')?.invalid && accountForm.get('branchName')?.touched">
+            <span class="error-message" *ngIf="accountForm.get('branchName')?.invalid && accountForm.get('branchName')?.touched">
+              Branch name is required
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPI Details Section -->
+      <div class="form-section">
+        <h2>UPI Details (Optional)</h2>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="upiId">UPI ID</label>
+            <input 
+              type="text" 
+              id="upiId" 
+              formControlName="upiId"
+              placeholder="e.g., yourname&#64;paytm"
+              [class.invalid]="accountForm.get('upiId')?.invalid && accountForm.get('upiId')?.touched">
+            <span class="error-message" *ngIf="accountForm.get('upiId')?.invalid && accountForm.get('upiId')?.touched">
+              Valid UPI ID format required (e.g., name&#64;paytm)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Razorpay Account (Vendor Only) -->
+      <div class="form-section" *ngIf="userType === 'vendor'">
+        <h2>Payment Gateway Account (Optional)</h2>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="razorpayAccountId">Razorpay Account ID</label>
+            <input 
+              type="text" 
+              id="razorpayAccountId" 
+              formControlName="razorpayAccountId"
+              placeholder="Enter Razorpay account ID">
+            <small class="help-text">For receiving payments via Razorpay</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification Status -->
+      <div class="verification-status" *ngIf="accountDetails">
+        <div class="status-badge" 
+             [class.verified]="accountDetails.isVerified" 
+             [class.rejected]="accountDetails.isRejected"
+             [class.pending]="!accountDetails.isVerified && !accountDetails.isRejected">
+          <span *ngIf="accountDetails.isVerified">✓ Verified</span>
+          <span *ngIf="accountDetails.isRejected">✕ Rejected</span>
+          <span *ngIf="!accountDetails.isVerified && !accountDetails.isRejected">⏳ Pending Verification</span>
+        </div>
+        <p *ngIf="accountDetails.verifiedAt" class="verified-date">
+          Verified on: {{ accountDetails.verifiedAt | date:'medium' }}
+        </p>
+        <p *ngIf="accountDetails.isRejected && accountDetails.rejectionReason" class="rejection-reason">
+          <strong>Rejection Reason:</strong> {{ accountDetails.rejectionReason }}
+        </p>
+        <p *ngIf="accountDetails.rejectedAt" class="rejected-date">
+          Rejected on: {{ accountDetails.rejectedAt | date:'medium' }}
+        </p>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="isSaving || accountForm.invalid">
+          <span *ngIf="!isSaving">💾 Save Account Details</span>
+          <span *ngIf="isSaving">⏳ Saving...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

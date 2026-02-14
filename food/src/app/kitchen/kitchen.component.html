@@ -1,0 +1,147 @@
+<div class="kitchen-container">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <span>Home</span> / <span>India</span> / <span>Ahmedabad</span> / <span class="current">{{ vendor?.shopName ||
+            'Kitchen' }}</span>
+    </div>
+
+    <!-- Header Section -->
+    <div class="vendor-header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="vendor-title">{{ vendor?.shopName || 'Loading...' }}</h1>
+                <p class="vendor-cuisine">North Indian, Fast Food, Beverages</p>
+                <p class="vendor-address">{{ vendor?.shopAddress || 'Address not available' }}</p>
+
+                <div class="vendor-status-row">
+                    <span class="status-open">Open now</span>
+                    <span class="timings">- 11am – 11pm (Today)</span>
+                    <span class="info-icon">ℹ property</span>
+                    <span class="separator">|</span>
+                    <span class="contact-number">📞 {{ vendor?.shopContactNumber || '+91 XXXXXXXXXX' }}</span>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-action direction"><span class="icon">↱</span> Direction</button>
+                    <button class="btn-action share"><span class="icon">↗</span> Share</button>
+                    <button class="btn-action reviews"><span class="icon">💬</span> Reviews</button>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="rating-box">
+                    <span class="rating-star">4.1 ★</span>
+                    <span class="rating-count">100+ Ratings</span>
+                    <span class="rating-label">Dining Ratings</span>
+                </div>
+                <div class="rating-box delivery">
+                    <span class="rating-star">4.3 ★</span>
+                    <span class="rating-count">500+ Ratings</span>
+                    <span class="rating-label">Delivery Ratings</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <div class="gallery-section">
+        <!-- Logic to show vendor images or products if vendor has no specific gallery -->
+        <div class="gallery-grid">
+            <div class="gallery-item main">
+                <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+                    alt="Main Food">
+            </div>
+            <div class="gallery-item side">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                    alt="Side Food 1">
+            </div>
+            <div class="gallery-item side">
+                <div class="more-photos">
+                    <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+                        alt="Side Food 2">
+                    <div class="overlay-text">View Gallery</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="tabs-nav sticky-nav">
+        <button class="tab-btn" [class.active]="activeTab === 'overview'"
+            (click)="setActiveTab('overview')">Overview</button>
+        <button class="tab-btn" [class.active]="activeTab === 'order'" (click)="setActiveTab('order')">Order
+            Online</button>
+        <button class="tab-btn" [class.active]="activeTab === 'reviews'"
+            (click)="setActiveTab('reviews')">Reviews</button>
+        <button class="tab-btn" [class.active]="activeTab === 'photos'" (click)="setActiveTab('photos')">Photos</button>
+        <button class="tab-btn" [class.active]="activeTab === 'menu'" (click)="setActiveTab('menu')">Menu</button>
+
+        <div class="search-within">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search within menu">
+        </div>
+    </div>
+
+    <hr class="tab-divider">
+
+    <!-- Order Online Content -->
+    <div class="tab-content" *ngIf="activeTab === 'order'">
+        <div class="row">
+            <!-- Sidebar Categories -->
+            <div class="col-md-3 category-sidebar">
+                <ul class="category-list">
+                    <li *ngFor="let cat of categories" [class.active]="selectedCategory === cat"
+                        (click)="filterByCategory(cat)">
+                        {{ cat }} ({{ (cat === 'All' ? products.length : 2) }})
+                    </li>
+                    <!-- Fallback static for demo matching image -->
+                    <!-- <li class="active">Thali (4)</li>
+           <li>Meals (6)</li>
+           <li>Rice & Biryani (12)</li>
+           <li>Breads (8)</li>
+           <li>Starters (5)</li> -->
+                </ul>
+            </div>
+
+            <!-- Product List -->
+            <div class="col-md-9 product-list-container">
+                <h2 class="order-header">Order Online</h2>
+                <div class="live-track">
+                    <span>⏱ Live track your order | 30 min</span>
+                </div>
+
+                <div class="product-items">
+                    <div class="product-item" *ngFor="let product of filteredProducts">
+                        <div class="prod-img">
+                            <img [src]="getImageUrl(product.image)" [alt]="product.name">
+                            <div class="vg-icon">🟩</div> <!-- Veg icon assumption -->
+                        </div>
+                        <div class="prod-details">
+                            <h3 class="prod-title">{{ product.name }}</h3>
+                            <div class="prod-rating">
+                                <div class="stars">⭐⭐⭐⭐☆</div>
+                                <span class="votes">12 votes</span>
+                            </div>
+                            <div class="prod-price">{{ product.price | currency:'INR' }}</div>
+                            <p class="prod-desc">{{ product.description }}</p>
+                        </div>
+                        <div class="prod-action">
+                            <div class="add-btn-wrapper">
+                                <button class="btn-add-item" (click)="addToCart(product)">ADD +</button>
+                                <!-- <span class="customizable">Customisable</span> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-placeholder" *ngIf="activeTab !== 'order'">
+        <div class="placeholder-content">
+            <h3>{{ activeTab | titlecase }} Section</h3>
+            <p>Content for {{ activeTab }} is coming soon.</p>
+        </div>
+    </div>
+
+</div>

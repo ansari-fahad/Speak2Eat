@@ -1,0 +1,930 @@
+<div class="admin-dashboard">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="admin-logo">
+                <div class="logo-icon">👑</div>
+                <h2>Admin Panel</h2>
+            </div>
+        </div>
+        <!-- Admin hurray -->
+
+        <nav class="sidebar-nav">
+            <button class="nav-item" [class.active]="activeTab === 'dashboard'" (click)="setActiveTab('dashboard')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">Dashboard</span>
+            </button>
+
+            <button class="nav-item" [class.active]="activeTab === 'users'" (click)="setActiveTab('users')">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">Users</span>
+                <span class="count">{{ platformStats.totalUsers }}</span>
+            </button>
+
+            <button class="nav-item" [class.active]="activeTab === 'vendors'" (click)="setActiveTab('vendors')">
+                <span class="nav-icon">🏪</span>
+                <span class="nav-text">Vendors</span>
+                <span class="badge" *ngIf="platformStats.pendingVendors > 0">{{ platformStats.pendingVendors }}</span>
+            </button>
+
+            <button class="nav-item" [class.active]="activeTab === 'products'" (click)="setActiveTab('products')">
+                <span class="nav-icon">📦</span>
+                <span class="nav-text">Products</span>
+            </button>
+
+            <button class="nav-item" [class.active]="activeTab === 'riders'" (click)="setActiveTab('riders')">
+                <span class="nav-icon">🛵</span>
+                <span class="nav-text">Riders</span>
+            </button>
+
+            <button class="nav-item" [class.active]="activeTab === 'orders'" (click)="setActiveTab('orders')">
+                <span class="nav-icon">🛒</span>
+                <span class="nav-text">Orders</span>
+            </button>
+
+            <button class="nav-item" [class.active]="activeTab === 'analytics'" (click)="setActiveTab('analytics')">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Analytics</span>
+            </button>
+
+            <button class="nav-item" [class.active]="activeTab === 'accounts'" (click)="setActiveTab('accounts')">
+                <span class="nav-icon">🏦</span>
+                <span class="nav-text">Account Requests</span>
+                <span class="badge" *ngIf="pendingAccounts.length > 0">{{ pendingAccounts.length }}</span>
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <!-- <div class="profile-avatar">A</div> -->
+                <div class="profile-info">
+                    <h4>{{userName}}</h4>
+                    <p>{{userEmail}}</p>
+                </div>
+            </div>
+            <button class="logout-btn" (click)="logout()">
+                <span>🚪</span> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Dashboard Tab -->
+        <div class="content-section" *ngIf="activeTab === 'dashboard'">
+            <div class="section-header">
+                <div>
+                    <h1>Platform Overview</h1>
+                    <p class="subtitle">Monitor and manage your entire food delivery platform</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-refresh">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card card-users">
+                    <div class="stat-icon-wrapper">
+                        <div class="stat-icon">👥</div>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Users</p>
+                        <h3 class="stat-number">{{ platformStats.totalUsers.toLocaleString() }}</h3>
+                        <div class="stat-footer">
+                            <span class="stat-change"
+                                [ngClass]="{'positive': platformStats.userGrowth >= 0, 'negative': platformStats.userGrowth < 0}">
+                                {{ platformStats.userGrowth >= 0 ? '↑' : '↓' }} {{ platformStats.userGrowth }}%
+                            </span>
+                            <span class="stat-period">vs last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-sparkline"></div>
+                </div>
+
+                <div class="stat-card card-vendors">
+                    <div class="stat-icon-wrapper">
+                        <div class="stat-icon">🏪</div>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Active Vendors</p>
+                        <h3 class="stat-number">{{ platformStats.totalVendors }}</h3>
+                        <div class="stat-footer">
+                            <span class="stat-change"
+                                [ngClass]="{'positive': platformStats.vendorGrowth >= 0, 'negative': platformStats.vendorGrowth < 0}">
+                                {{ platformStats.vendorGrowth >= 0 ? '↑' : '↓' }} {{ platformStats.vendorGrowth }}%
+                            </span>
+                            <span class="stat-period">vs last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-sparkline"></div>
+                </div>
+
+                <div class="stat-card card-products">
+                    <div class="stat-icon-wrapper">
+                        <div class="stat-icon">📦</div>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Products</p>
+                        <h3 class="stat-number">{{ platformStats.totalProducts.toLocaleString() }}</h3>
+                        <div class="stat-footer">
+                            <span class="stat-change"
+                                [ngClass]="{'positive': platformStats.productGrowth >= 0, 'negative': platformStats.productGrowth < 0}">
+                                {{ platformStats.productGrowth >= 0 ? '↑' : '↓' }} {{ platformStats.productGrowth }}%
+                            </span>
+                            <span class="stat-period">vs last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-sparkline"></div>
+                </div>
+
+                <div class="stat-card card-revenue">
+                    <div class="stat-icon-wrapper">
+                        <div class="stat-icon">💰</div>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Revenue</p>
+                        <h3 class="stat-number">₹{{ platformStats.totalRevenue.toLocaleString() }}</h3>
+                        <div class="stat-footer">
+                            <span class="stat-change"
+                                [ngClass]="{'positive': platformStats.revenueGrowth >= 0, 'negative': platformStats.revenueGrowth < 0}">
+                                {{ platformStats.revenueGrowth >= 0 ? '↑' : '↓' }} {{ platformStats.revenueGrowth }}%
+                            </span>
+                            <span class="stat-period">vs last month</span>
+                        </div>
+                    </div>
+                    <div class="stat-sparkline"></div>
+                </div>
+            </div>
+
+            <!-- Revenue Chart -->
+            <div class="chart-section">
+                <div class="chart-header">
+                    <h2>Revenue Overview</h2>
+                    <div class="chart-legend">
+                        <span class="legend-item">
+                            <span class="legend-dot"></span>
+                            Last 7 Days
+                        </span>
+                    </div>
+                </div>
+                <div class="revenue-chart">
+                    <div class="chart-bars">
+                        <div class="bar-wrapper" *ngFor="let data of revenueData">
+                            <div class="bar-container">
+                                <div class="bar" [style.height.%]="getRevenueHeight(data.revenue)">
+                                    <span class="bar-value">₹{{ (data.revenue / 1000).toFixed(0) }}k</span>
+                                </div>
+                            </div>
+                            <span class="bar-label">{{ data.day }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats Row -->
+            <div class="quick-stats-row">
+                <div class="quick-stat-card">
+                    <div class="quick-stat-icon">⏳</div>
+                    <div class="quick-stat-info">
+                        <h4>{{ platformStats.activeOrders }}</h4>
+                        <p>Active Orders</p>
+                    </div>
+                </div>
+
+                <div class="quick-stat-card">
+                    <div class="quick-stat-icon">✅</div>
+                    <div class="quick-stat-info">
+                        <h4>{{ platformStats.totalOrders }}</h4>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+
+                <div class="quick-stat-card">
+                    <div class="quick-stat-icon">⚠️</div>
+                    <div class="quick-stat-info">
+                        <h4>{{ platformStats.pendingVendors }}</h4>
+                        <p>Pending Approvals</p>
+                    </div>
+                </div>
+
+                <div class="quick-stat-card">
+                    <div class="quick-stat-icon">📈</div>
+                    <div class="quick-stat-info">
+                        <h4>{{ platformStats.monthlyGrowth }}%</h4>
+                        <p>Growth Rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Vendors -->
+            <div class="top-vendors-section">
+                <h2>Top Performing Vendors</h2>
+                <div class="vendors-list">
+                    <div class="vendor-item" *ngFor="let vendor of getTopVendors(); let i = index">
+                        <div class="vendor-rank">{{ i + 1 }}</div>
+                        <div class="vendor-info">
+                            <h4>{{ vendor.businessName }}</h4>
+                            <p>{{ vendor.category }}</p>
+                        </div>
+                        <div class="vendor-stats">
+                            <div class="vendor-stat">
+                                <span class="label">Revenue</span>
+                                <span class="value">₹{{ vendor.revenue.toLocaleString() }}</span>
+                            </div>
+                            <div class="vendor-stat">
+                                <span class="label">Orders</span>
+                                <span class="value">{{ vendor.totalOrders }}</span>
+                            </div>
+                            <div class="vendor-stat">
+                                <span class="label">Rating</span>
+                                <span class="value">⭐ {{ vendor.rating }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div class="content-section" *ngIf="activeTab === 'users'">
+            <div class="section-header">
+                <h1>Users Management</h1>
+                <div class="header-actions">
+                    <input type="search" placeholder="Search users..." class="search-input">
+                    <button class="btn-primary" (click)="openUserModal()">+ Add User</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Join Date</th>
+                            <th>Orders</th>
+                            <th>Total Spent</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of users" class="table-row">
+                            <td><strong>{{ user.id }}</strong></td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.phone }}</td>
+                            <td>{{ user.joinDate | date:'mediumDate' }}</td>
+                            <td>{{ user.totalOrders }}</td>
+                            <td><strong>₹{{ user.totalSpent.toLocaleString() }}</strong></td>
+                            <td>
+                                <span class="status-badge" [ngClass]="getStatusClass(user.status)">
+                                    {{ user.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit" (click)="openUserModal(user)">Edit</button>
+                                    <button class="btn-action btn-delete" (click)="deleteUser(user.id)">Delete</button>
+                                    <button class="btn-action btn-toggle" (click)="toggleUserStatus(user)">
+                                        {{ user.status === 'blocked' ? 'Unblock' : 'Block' }}
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Vendors Tab -->
+        <div class="content-section" *ngIf="activeTab === 'vendors'">
+            <div class="section-header">
+                <h1>Vendors Management</h1>
+                <div class="header-actions">
+                    <input type="search" placeholder="Search vendors..." class="search-input">
+                    <button class="btn-primary" (click)="openVendorModal()">+ Add Vendor</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Vendor ID</th>
+                            <th>Business Name</th>
+                            <th>Owner</th>
+                            <th>Category</th>
+                            <th>Products</th>
+                            <th>Orders</th>
+                            <th>Revenue</th>
+                            <th>Rating</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let vendor of vendors" class="table-row">
+                            <td><strong>{{ vendor.id }}</strong></td>
+                            <td>{{ vendor.businessName }}</td>
+                            <td>{{ vendor.name }}</td>
+                            <td>{{ vendor.category }}</td>
+                            <td>{{ vendor.totalProducts }}</td>
+                            <td>{{ vendor.totalOrders }}</td>
+                            <td><strong>₹{{ vendor.revenue.toLocaleString() }}</strong></td>
+                            <td>
+                                <span class="rating">⭐ {{ vendor.rating || 'N/A' }}</span>
+                            </td>
+                            <td>
+                                <span class="status-badge" [ngClass]="getStatusClass(vendor.status)">
+                                    {{ vendor.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit" (click)="openVendorModal(vendor)">Edit</button>
+                                    <button class="btn-action btn-delete"
+                                        (click)="deleteVendor(vendor.id)">Delete</button>
+                                    <button *ngIf="vendor.status === 'pending'" class="btn-action btn-approve"
+                                        (click)="approveVendor(vendor)">
+                                        Approve
+                                    </button>
+                                    <button *ngIf="vendor.status === 'active'" class="btn-action btn-suspend"
+                                        (click)="suspendVendor(vendor)">
+                                        Suspend
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div class="content-section" *ngIf="activeTab === 'products'">
+            <div class="section-header">
+                <h1>Products Management</h1>
+                <div class="header-actions">
+                    <input type="search" placeholder="Search products..." class="search-input">
+                    <select class="filter-select">
+                        <option value="">All Categories</option>
+                        <option value="pizza">Pizza</option>
+                        <option value="burgers">Burgers</option>
+                        <option value="japanese">Japanese</option>
+                        <option value="indian">Indian</option>
+                    </select>
+                    <button class="btn-primary" (click)="openProductModal()">+ Add Product</button>
+                </div>
+            </div>
+
+            <div class="products-grid-admin">
+                <div class="product-card-admin" *ngFor="let product of products">
+                    <div class="product-header">
+                        <h3>{{ product.name }}</h3>
+                        <span class="status-badge" [ngClass]="getStatusClass(product.status)">
+                            {{ product.status }}
+                        </span>
+                    </div>
+                    <div class="product-details-admin">
+                        <div class="detail-row">
+                            <span class="label">ID:</span>
+                            <span class="value">{{ product.id }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Vendor:</span>
+                            <span class="value">{{ product.vendorName }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Category:</span>
+                            <span class="value">{{ product.category }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Price:</span>
+                            <span class="value price">₹{{ product.price }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Stock:</span>
+                            <span class="value" [class.low-stock]="product.stock < 10">{{ product.stock }} units</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Sales:</span>
+                            <span class="value">{{ product.sales }} sold</span>
+                        </div>
+                    </div>
+                    <div class="product-actions-admin">
+                        <button class="btn-action btn-edit" (click)="openProductModal(product)">Edit</button>
+                        <button class="btn-action btn-delete" (click)="deleteProduct(product.id)">Delete</button>
+                        <button class="btn-action btn-toggle" (click)="toggleProductStatus(product)">
+                            {{ product.status === 'active' ? 'Deactivate' : 'Activate' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div class="content-section" *ngIf="activeTab === 'orders'">
+            <div class="section-header">
+                <h1>Orders Management</h1>
+                <div class="header-actions">
+                    <input type="search" placeholder="Search orders..." class="search-input">
+                    <select class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Vendor</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Order Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let order of orders" class="table-row">
+                            <td><strong>{{ order.id }}</strong></td>
+                            <td>{{ order.customerName }}</td>
+                            <td>{{ order.vendorName }}</td>
+                            <td>{{ order.items }} items</td>
+                            <td><strong>₹{{ order.total }}</strong></td>
+                            <td>
+                                <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+                            <td>{{ order.orderDate | date:'medium' }}</td>
+                            <td>
+                                <button class="btn-action btn-view">View Details</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div class="content-section" *ngIf="activeTab === 'analytics'">
+            <div class="section-header">
+                <h1>Platform Analytics</h1>
+                <div class="header-actions">
+                    <select class="filter-select">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30">Last 30 Days</option>
+                        <option value="90">Last 3 Months</option>
+                        <option value="365">Last Year</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>Revenue Breakdown</h3>
+                    <div class="pie-chart-placeholder">
+                        <div class="pie-segment segment-1"></div>
+                        <div class="pie-segment segment-2"></div>
+                        <div class="pie-segment segment-3"></div>
+                        <div class="chart-center">
+                            <h4>₹2.8M</h4>
+                            <p>Total</p>
+                        </div>
+                    </div>
+                    <div class="chart-labels">
+                        <div class="label-item">
+                            <span class="color-dot dot-1"></span>
+                            <span>Food (65%)</span>
+                        </div>
+                        <div class="label-item">
+                            <span class="color-dot dot-2"></span>
+                            <span>Beverages (25%)</span>
+                        </div>
+                        <div class="label-item">
+                            <span class="color-dot dot-3"></span>
+                            <span>Desserts (10%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-card">
+                    <h3>Order Status Distribution</h3>
+                    <div class="progress-bars">
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span>Delivered</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span>Processing</span>
+                                <span>15%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 15%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span>Pending</span>
+                                <span>7%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 7%"></div>
+                            </div>
+                        </div>
+                        <div class="progress-item">
+                            <div class="progress-header">
+                                <span>Cancelled</span>
+                                <span>3%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 3%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-card full-width">
+                    <h3>Platform Growth Metrics</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="metric-icon">👥</div>
+                            <div class="metric-data">
+                                <h4>+{{ (platformStats.totalUsers * 0.125).toFixed(0) }}</h4>
+                                <p>New Users</p>
+                                <span class="metric-trend up">↑ 12.5%</span>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-icon">🏪</div>
+                            <div class="metric-data">
+                                <h4>+{{ (platformStats.totalVendors * 0.083).toFixed(0) }}</h4>
+                                <p>New Vendors</p>
+                                <span class="metric-trend up">↑ 8.3%</span>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-icon">📦</div>
+                            <div class="metric-data">
+                                <h4>+{{ (platformStats.totalProducts * 0.157).toFixed(0) }}</h4>
+                                <p>New Products</p>
+                                <span class="metric-trend up">↑ 15.7%</span>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-icon">💰</div>
+                            <div class="metric-data">
+                                <h4>+₹{{ (platformStats.totalRevenue * 0.235 / 1000).toFixed(0) }}k</h4>
+                                <p>Revenue Growth</p>
+                                <span class="metric-trend up">↑ 23.5%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Requests Tab -->
+        <div class="content-section" *ngIf="activeTab === 'accounts'">
+            <div class="section-header">
+                <div>
+                    <h1>Account Requests</h1>
+                    <p class="subtitle">Review and approve/reject bank account details</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-refresh" (click)="loadAccountRequests()">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <div *ngIf="isLoadingAccounts" class="loading-state">
+                <p>Loading account requests...</p>
+            </div>
+
+            <!-- Pending Requests -->
+            <div *ngIf="!isLoadingAccounts && pendingAccounts.length > 0" class="accounts-section">
+                <h2 class="section-title">Pending Requests ({{ pendingAccounts.length }})</h2>
+                <div class="accounts-grid">
+                    <div class="account-card pending" *ngFor="let account of pendingAccounts">
+                        <div class="account-header">
+                            <h3>{{ account.accountHolderName }}</h3>
+                            <span class="status-badge pending">Pending</span>
+                        </div>
+                        <div class="account-details">
+                            <p><strong>User Type:</strong> {{ account.userType }}</p>
+                            <p><strong>Account Number:</strong> {{ account.accountNumber }}</p>
+                            <p><strong>IFSC Code:</strong> {{ account.ifscCode }}</p>
+                            <p><strong>Bank:</strong> {{ account.bankName }}</p>
+                            <p><strong>Branch:</strong> {{ account.branchName }}</p>
+                            <p *ngIf="account.upiId"><strong>UPI ID:</strong> {{ account.upiId }}</p>
+                            <p><strong>Submitted:</strong> {{ account.createdAt | date:'short' }}</p>
+                        </div>
+                        <div class="account-actions">
+                            <button class="btn-approve" (click)="approveAccount(account)">✓ Approve</button>
+                            <button class="btn-reject" (click)="rejectAccount(account)">✕ Reject</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Requests -->
+            <div *ngIf="!isLoadingAccounts" class="accounts-section">
+                <h2 class="section-title">All Account Requests</h2>
+                <div class="accounts-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Account Holder</th>
+                                <th>User Type</th>
+                                <th>Bank</th>
+                                <th>Account Number</th>
+                                <th>Status</th>
+                                <th>Reviewed By</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let account of accountRequests">
+                                <td>{{ account.accountHolderName }}</td>
+                                <td>{{ account.userType }}</td>
+                                <td>{{ account.bankName }}</td>
+                                <td>{{ account.accountNumber }}</td>
+                                <td>
+                                    <span class="status-badge" [class.approved]="account.isVerified"
+                                        [class.rejected]="account.isRejected"
+                                        [class.pending]="!account.isVerified && !account.isRejected">
+                                        {{ account.isVerified ? 'Approved' : (account.isRejected ? 'Rejected' :
+                                        'Pending') }}
+                                    </span>
+                                </td>
+                                <td>{{ account.reviewedBy?.name || 'N/A' }}</td>
+                                <td>
+                                    <button *ngIf="!account.isVerified && !account.isRejected" class="btn-approve-small"
+                                        (click)="approveAccount(account)">Approve</button>
+                                    <button *ngIf="!account.isVerified && !account.isRejected" class="btn-reject-small"
+                                        (click)="rejectAccount(account)">Reject</button>
+                                    <span *ngIf="account.isRejected && account.rejectionReason" class="rejection-reason"
+                                        [title]="account.rejectionReason">
+                                        Reason: {{ account.rejectionReason }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div *ngIf="!isLoadingAccounts && accountRequests.length === 0" class="empty-state">
+                <p>No account requests found</p>
+            </div>
+        </div>
+        <!-- Riders Tab -->
+        <div class="content-section" *ngIf="activeTab === 'riders'">
+            <div class="section-header">
+                <h1>Riders Management</h1>
+                <div class="header-actions">
+                    <input type="search" placeholder="Search riders..." class="search-input">
+                    <button class="btn-primary" (click)="openRiderModal()">+ Add Rider</button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Vehicle</th>
+                            <th>Status</th>
+                            <th>Profile</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let rider of riders" class="table-row">
+                            <td>{{ rider.name }}</td>
+                            <td>{{ rider.email }}</td>
+                            <td>{{ rider.phone }}</td>
+                            <td>{{ rider.vehicleType }} ({{ rider.vehicleNumber }})</td>
+                            <td>
+                                <span class="status-badge" [ngClass]="getStatusClass(rider.status)">
+                                    {{ rider.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-badge"
+                                    [ngClass]="{'active': rider.profileComplete, 'pending': !rider.profileComplete}">
+                                    {{ rider.profileComplete ? 'Complete' : 'Incomplete' }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit" (click)="openRiderModal(rider)">Edit</button>
+                                    <button class="btn-action btn-delete"
+                                        (click)="deleteRider(rider.id)">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODALS -->
+
+    <!-- User Modal -->
+    <div class="modal-overlay" *ngIf="showUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>{{ isEditing ? 'Edit User' : 'Add User' }}</h2>
+                <button class="close-btn" (click)="closeUserModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="saveUser()">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" [(ngModel)]="userForm.name" name="name" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" [(ngModel)]="userForm.email" name="email" required class="form-control">
+                    </div>
+                    <div class="form-group" *ngIf="!isEditing">
+                        <label>Password</label>
+                        <input type="password" [(ngModel)]="userForm.password" name="password" required
+                            class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" [(ngModel)]="userForm.phone" name="phone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea [(ngModel)]="userForm.address" name="address" class="form-control"></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" (click)="closeUserModal()">Cancel</button>
+                        <button type="submit" class="btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Modal -->
+    <div class="modal-overlay" *ngIf="showVendorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>{{ isEditing ? 'Edit Vendor' : 'Add Vendor' }}</h2>
+                <button class="close-btn" (click)="closeVendorModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="saveVendor()">
+                    <div class="form-group">
+                        <label>Owner Name</label>
+                        <input type="text" [(ngModel)]="vendorForm.name" name="name" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Business Name</label>
+                        <input type="text" [(ngModel)]="vendorForm.shopName" name="shopName" required
+                            class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" [(ngModel)]="vendorForm.email" name="email" required class="form-control">
+                    </div>
+                    <div class="form-group" *ngIf="!isEditing">
+                        <label>Password</label>
+                        <input type="password" [(ngModel)]="vendorForm.password" name="password" required
+                            class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" [(ngModel)]="vendorForm.phone" name="phone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select [(ngModel)]="vendorForm.shopCategory" name="shopCategory" class="form-control">
+                            <option value="Restaurant">Restaurant</option>
+                            <option value="Grocery">Grocery</option>
+                            <option value="Bakery">Bakery</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" (click)="closeVendorModal()">Cancel</button>
+                        <button type="submit" class="btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rider Modal -->
+    <div class="modal-overlay" *ngIf="showRiderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>{{ isEditing ? 'Edit Rider' : 'Add Rider' }}</h2>
+                <button class="close-btn" (click)="closeRiderModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="saveRider()">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" [(ngModel)]="riderForm.name" name="name" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" [(ngModel)]="riderForm.email" name="email" required class="form-control">
+                    </div>
+                    <div class="form-group" *ngIf="!isEditing">
+                        <label>Password</label>
+                        <input type="password" [(ngModel)]="riderForm.password" name="password" required
+                            class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" [(ngModel)]="riderForm.phone" name="phone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Type</label>
+                        <select [(ngModel)]="riderForm.vehicleType" name="vehicleType" class="form-control">
+                            <option value="bike">Bike</option>
+                            <option value="scooter">Scooter</option>
+                            <option value="bicycle">Bicycle</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Number</label>
+                        <input type="text" [(ngModel)]="riderForm.vehicleNumber" name="vehicleNumber"
+                            class="form-control">
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" (click)="closeRiderModal()">Cancel</button>
+                        <button type="submit" class="btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal-overlay" *ngIf="showProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>{{ isEditing ? 'Edit Product' : 'Add Product' }}</h2>
+                <button class="close-btn" (click)="closeProductModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="saveProduct()">
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" [(ngModel)]="productForm.name" name="name" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" [(ngModel)]="productForm.category" name="category" required
+                            class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" [(ngModel)]="productForm.price" name="price" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Stock</label>
+                        <input type="number" [(ngModel)]="productForm.stock" name="stock" required class="form-control">
+                    </div>
+                    <!-- Simplification: Vendor ID input. Ideally a dropdown of vendors -->
+                    <div class="form-group">
+                        <label>Vendor ID</label>
+                        <input type="text" [(ngModel)]="productForm.vendor_id" name="vendor_id" class="form-control"
+                            placeholder="Vendor ID">
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" (click)="closeProductModal()">Cancel</button>
+                        <button type="submit" class="btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

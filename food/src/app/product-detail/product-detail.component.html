@@ -1,0 +1,179 @@
+<div class="product-detail-page" *ngIf="product">
+    <!-- Back Button -->
+    <div class="back-button-container">
+        <button class="back-btn" (click)="goBack()">
+            <span class="back-icon">←</span>
+            <span>Back</span>
+        </button>
+    </div>
+
+    <!-- Product Detail Section -->
+    <div class="product-detail-container">
+        <!-- Product Image Section -->
+        <div class="product-image-section">
+            <div class="image-wrapper">
+                <img [src]="product.image" [alt]="product.name" class="main-product-image">
+                <div class="image-badge" *ngIf="product.badge">{{ product.badge }}</div>
+                <div class="image-glow"></div>
+            </div>
+        </div>
+
+        <!-- Product Info Section -->
+        <div class="product-info-section">
+            <!-- Category Badge -->
+            <div class="category-badge">{{ product.category }}</div>
+
+            <!-- Product Title -->
+            <h1 class="product-title">{{ product.name }}</h1>
+
+            <!-- Rating -->
+            <div class="rating-section">
+                <div class="stars">
+                    <span *ngFor="let star of getRatingStars()" [class]="'star ' + star">⭐</span>
+                </div>
+                <span class="rating-value">{{ product.rating }}</span>
+                <span class="reviews-count">({{ product.reviews }} reviews)</span>
+            </div>
+
+            <!-- Price -->
+            <div class="price-section">
+                <span class="current-price">₹{{ product.price }}</span>
+                <span class="original-price" *ngIf="product.originalPrice">₹{{ product.originalPrice }}</span>
+                <span class="discount" *ngIf="product.originalPrice">
+                    {{ ((product.originalPrice - product.price) / product.originalPrice * 100).toFixed(0) }}% OFF
+                </span>
+            </div>
+
+            <!-- Description -->
+            <div class="description-section">
+                <h3>Description</h3>
+                <p>{{ product.description }}</p>
+            </div>
+
+            <!-- Size Selection -->
+            <div class="size-section">
+                <h3>Select Size</h3>
+                <div class="size-options">
+                    <button *ngFor="let size of sizes" [class.active]="selectedSize === size" (click)="selectSize(size)"
+                        class="size-btn">
+                        {{ size }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quantity Selection -->
+            <div class="quantity-section">
+                <h3>Quantity</h3>
+                <div class="quantity-controls">
+                    <button class="qty-btn" (click)="decreaseQuantity()">−</button>
+                    <span class="qty-value">{{ quantity }}</span>
+                    <button class="qty-btn" (click)="increaseQuantity()">+</button>
+                </div>
+            </div>
+
+            <!-- Add to Cart Button -->
+            <div class="action-buttons">
+                <button class="add-to-cart-btn" (click)="addToCart()">
+                    <span class="cart-icon">🛒</span>
+                    <span>Add to Cart - ₹{{ product.price * quantity }}</span>
+                </button>
+                <button class="wishlist-btn">
+                    <span>❤️</span>
+                </button>
+            </div>
+
+            <!-- Additional Info -->
+            <div class="additional-info">
+                <div class="info-item">
+                    <span class="info-icon">🚚</span>
+                    <div class="info-content">
+                        <strong>Free Delivery</strong>
+                        <p>On orders above ₹500</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">⏱️</span>
+                    <div class="info-content">
+                        <strong>30 Min Delivery</strong>
+                        <p>Fast and fresh</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">✓</span>
+                    <div class="info-content">
+                        <strong>Quality Assured</strong>
+                        <p>100% fresh ingredients</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Information Tabs -->
+    <div class="details-tabs-section">
+        <div class="tabs-container">
+            <!-- Ingredients -->
+            <div class="tab-panel" *ngIf="product.ingredients">
+                <h2 class="tab-title">Ingredients</h2>
+                <div class="ingredients-grid">
+                    <div class="ingredient-item" *ngFor="let ingredient of product.ingredients">
+                        <span class="ingredient-icon">🥘</span>
+                        <span>{{ ingredient }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nutrition Info -->
+            <div class="tab-panel" *ngIf="product.nutritionInfo">
+                <h2 class="tab-title">Nutrition Information</h2>
+                <div class="nutrition-grid">
+                    <div class="nutrition-item" *ngFor="let item of product.nutritionInfo | keyvalue">
+                        <span class="nutrition-label">{{ item.key }}</span>
+                        <span class="nutrition-value">{{ item.value }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Allergens -->
+            <div class="tab-panel" *ngIf="product.allergens">
+                <h2 class="tab-title">Allergen Information</h2>
+                <div class="allergens-list">
+                    <div class="allergen-item" *ngFor="let allergen of product.allergens">
+                        <span class="allergen-icon">⚠️</span>
+                        <span>{{ allergen }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="related-products-section" *ngIf="relatedProducts.length > 0">
+        <h2 class="section-title">You May Also Like</h2>
+        <div class="related-products-grid">
+            <div class="related-product-card" *ngFor="let relatedProduct of relatedProducts"
+                (click)="viewProduct(relatedProduct)">
+                <div class="related-product-image">
+                    <img [src]="relatedProduct.image" [alt]="relatedProduct.name">
+                    <div class="related-overlay">
+                        <button class="quick-view">View Details</button>
+                    </div>
+                </div>
+                <div class="related-product-info">
+                    <h4>{{ relatedProduct.name }}</h4>
+                    <div class="related-rating">
+                        <span class="stars">⭐</span>
+                        <span>{{ relatedProduct.rating }}</span>
+                    </div>
+                    <div class="related-price">₹{{ relatedProduct.price }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-state" *ngIf="!product">
+    <div class="spinner"></div>
+    <p>Loading product details...</p>
+</div>

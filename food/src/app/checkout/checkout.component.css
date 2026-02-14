@@ -1,0 +1,209 @@
+.checkout-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    font-family: 'Okra', Helvetica, sans-serif;
+}
+
+.checkout-layout {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+}
+
+/* Form Styles */
+.form-section {
+    flex: 2;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #1c1c1c;
+}
+
+.mt-4 {
+    margin-top: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.row {
+    display: flex;
+    gap: 1rem;
+}
+
+.half {
+    flex: 1;
+}
+
+label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #696969;
+    margin-bottom: 0.4rem;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #ef4f5f;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(239, 79, 95, 0.1);
+}
+
+.error {
+    color: #ef4f5f;
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+}
+
+/* Payment Options */
+.payment-options {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.payment-card {
+    flex: 1;
+    cursor: pointer;
+}
+
+.payment-card input {
+    display: none;
+}
+
+.card-content {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.payment-card input:checked+.card-content {
+    border-color: #ef4f5f;
+    background: #fff0f1;
+    color: #ef4f5f;
+    font-weight: 600;
+}
+
+.icon {
+    font-size: 1.5rem;
+}
+
+/* Place Order Button */
+.btn-place-order {
+    width: 100%;
+    background: #ef4f5f;
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-place-order:hover {
+    background: #d63f4d;
+}
+
+/* Summary Styles */
+.summary-section {
+    flex: 1;
+}
+
+.summary-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 2rem;
+}
+
+.summary-card h3 {
+    font-size: 1.2rem;
+    margin: 0 0 1rem;
+    color: #1c1c1c;
+}
+
+.summary-items {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.s-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+}
+
+.item-info {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.qty {
+    font-weight: 600;
+    color: #ef4f5f;
+}
+
+.divider {
+    height: 1px;
+    background: #eee;
+    margin: 1rem 0;
+}
+
+.totals-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    color: #696969;
+}
+
+.grand-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #1c1c1c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .checkout-layout {
+        flex-direction: column;
+    }
+
+    .summary-section {
+        width: 100%;
+        order: -1;
+        /* Show summary first on mobile? or last. Order -1 means top. */
+    }
+}

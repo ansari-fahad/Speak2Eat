@@ -1,0 +1,41 @@
+import { Routes } from '@angular/router';
+import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
+import { LandingComponent } from './landing/landing.component';
+import { CategoryProductsComponent } from './category-products/category-products.component';
+import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { VendorComponent } from './vendor/vendor.component';
+import { AdminComponent } from './admin/admin.component';
+import { DeliveryPartnerComponent } from './delivery-partner/delivery-partner.component';
+import { ProfileViewComponent } from './delivery-partner/profile-view/profile-view.component';
+import { CartComponent } from './cart/cart.component';
+import { KitchenComponent } from './kitchen/kitchen.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { OrderHistoryComponent } from './order-history/order-history.component';
+import { AccountDetailsComponent } from './account-details/account-details.component';
+import { AccountsDetailsComponent } from './account-details/account1-details.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { VendorHistoryComponent } from './vendor-history/vendor-history.component';
+
+export const routes: Routes = [
+  { path: '', component: LandingComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'signup', component: SignupComponent },
+  { path: 'vendor', component: VendorComponent },
+  { path: 'admin', component: AdminComponent },
+  { path: 'delivery-partner', component: DeliveryPartnerComponent },
+  { path: 'profile-view', component: ProfileViewComponent },
+  { path: 'category/:category', component: CategoryProductsComponent },
+  { path: 'product/:id', component: ProductDetailComponent },
+  { path: 'cart', component: CartComponent },
+  { path: 'kitchen/:id', component: KitchenComponent },
+  { path: 'checkout', component: CheckoutComponent },
+  { path: 'orders', component: OrderHistoryComponent },
+  { path: 'account', component: AccountDetailsComponent },
+  { path: 'accounts', component: AccountsDetailsComponent },
+  { path: 'vendor-history', component: VendorHistoryComponent }
+
+];

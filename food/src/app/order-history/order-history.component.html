@@ -1,0 +1,137 @@
+<div class="account-bg-elements">
+    <div class="floating-circle circle-1"></div>
+    <div class="floating-circle circle-2"></div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar"
+    style="position: fixed; top: 0; width: 100%; padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(15px); background: rgba(255, 255, 255, 0.8); z-index: 100; box-sizing: border-box; border-bottom: 1px solid rgba(255, 255, 255, 0.5);">
+    <a routerLink="/" class="logo"
+        style="text-decoration: none; font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; background: linear-gradient(45deg, #ff4e50, #f9d423); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Speak2Eat</a>
+
+    <div class="auth-buttons">
+        <a routerLink="/cart" class="btn btn-cart"
+            style="margin-left: 1rem; padding: 0.7rem 1.4rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: white; background: linear-gradient(135deg, #ff9966 0%, #ff5e62 100%); box-shadow: 0 4px 15px rgba(255, 94, 98, 0.3);">🛒
+            Cart</a>
+        <a routerLink="/orders" class="btn btn-orders"
+            style="margin-left: 1rem; padding: 0.7rem 1.4rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: #444; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); box-shadow: 0 4px 15px rgba(255, 154, 158, 0.2);">📦
+            Orders</a>
+        <a routerLink="/account" class="btn btn-vendor"
+            style="margin-left: 1rem; padding: 0.7rem 1.4rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: white; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">👤
+            Profile</a>
+        <button (click)="logout()" class="btn btn-signin"
+            style="margin-left: 1rem; padding: 0.7rem 1.4rem; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 0.9rem; color: #333; background: white; border: 1px solid #eee; cursor: pointer;">Logout</button>
+    </div>
+</nav>
+
+<div class="orders-container" style="margin-top: 100px;">
+    <div class="header">
+        <h1>{{ userRole === 'vendor' ? 'Incoming Orders' : 'Your Orders' }}</h1>
+        <p class="subtitle">{{ orders.length }} orders found</p>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div *ngIf="!loading && orders.length === 0" class="empty-state">
+        <div class="icon">📦</div>
+        <h2>No orders found</h2>
+        <p *ngIf="userRole !== 'vendor'">Go ahead and order some delicious food!</p>
+    </div>
+
+    <div class="orders-list">
+        <div class="order-card" *ngFor="let order of orders">
+            <div class="order-header">
+                <div class="order-info">
+                    <span class="order-id">Order #{{ order.id }}</span>
+                    <span class="order-date">{{ order.orderDate | date:'medium' }}</span>
+                </div>
+                <div class="order-status" [ngClass]="order.status.toLowerCase()">
+                    {{ order.status }}
+                </div>
+            </div>
+
+            <!-- Customer/Vendor Info -->
+            <div class="order-customer-info" *ngIf="userRole === 'vendor'">
+                <div class="info-row">
+                    <strong>👤 Customer:</strong> {{ order.customerName }}
+                </div>
+                <div class="info-row">
+                    <strong>📧 Email:</strong> {{ order.customerEmail }}
+                </div>
+                <div class="info-row">
+                    <strong>📞 Phone:</strong> {{ order.customerPhone }}
+                </div>
+                <div class="info-row">
+                    <strong>📍 Delivery Address:</strong> {{ order.deliveryAddress }}
+                </div>
+            </div>
+
+            <div class="order-vendor-info" *ngIf="userRole === 'user'">
+                <div class="info-row">
+                    <strong>🏪 Vendor:</strong> {{ order.vendorName }}
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="order-items">
+                <h4>Items:</h4>
+                <div class="item" *ngFor="let item of order.products">
+                    <img [src]="getImageUrl(item.productId?.image)" [alt]="item.productId?.name" class="item-image">
+                    <div class="item-details">
+                        <span class="item-name">{{ item.productId?.name || 'Unknown Item' }}</span>
+                        <span class="item-qty">Quantity: {{ item.quantity }}</span>
+                        <span class="item-unit-price">₹{{ item.productId?.price || 0 }} each</span>
+                    </div>
+                    <span class="item-price">₹{{ (item.productId?.price || 0) * item.quantity }}</span>
+                </div>
+            </div>
+
+            <!-- Order Timeline (for vendor) -->
+            <div class="order-timeline" *ngIf="userRole === 'vendor'">
+                <div class="timeline-item" *ngIf="order.acceptedAt">
+                    <span class="timeline-label">Accepted:</span>
+                    <span class="timeline-value">{{ order.acceptedAt | date:'medium' }}</span>
+                </div>
+                <div class="timeline-item" *ngIf="order.preparationDeadline">
+                    <span class="timeline-label">Deadline:</span>
+                    <span class="timeline-value">{{ order.preparationDeadline | date:'medium' }}</span>
+                </div>
+                <div class="timeline-item" *ngIf="order.deliveredAt">
+                    <span class="timeline-label">Delivered:</span>
+                    <span class="timeline-value">{{ order.deliveredAt | date:'medium' }}</span>
+                </div>
+                <div class="timeline-item warning" *ngIf="order.lateFeeApplied">
+                    <span class="timeline-label">⚠️ Late Fee:</span>
+                    <span class="timeline-value">₹{{ order.lateFeeAmount }}</span>
+                </div>
+            </div>
+
+            <div class="order-footer">
+                <div class="payment-info">
+                    <span class="label">Payment Method:</span>
+                    <span class="value">{{ order.paymentType }}</span>
+                </div>
+                <div class="total-amount" style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+                    <div style="display:flex; gap:10px;">
+                        <span>Items Total:</span>
+                        <span class="amount">₹{{ getItemsSubtotal(order) }}</span>
+                    </div>
+                    <div style="display:flex; gap:10px; opacity:.85;">
+                        <span>Delivery:</span>
+                        <span>₹{{ getDeliveryCharge(order) }}</span>
+                    </div>
+                    <div style="display:flex; gap:10px; opacity:.85;">
+                        <span>Platform:</span>
+                        <span>₹{{ getPlatformFee(order) }}</span>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-top:4px;">
+                        <span><strong>Total Amount:</strong></span>
+                        <span class="amount"><strong>₹{{ getDisplayTotal(order) }}</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
